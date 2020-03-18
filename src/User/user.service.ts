@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './User';
 import { UserRepository } from './user.repository';
 import { IRegisterUserDto } from '../dto/RegisterUserDto';
+import { UserDoesntExistsError } from './UserDoesntExistsError';
 
 @Injectable()
 export class UserService {
@@ -33,5 +34,16 @@ export class UserService {
         user.type = registerUserDto.userType;
         user.isValidated = false;
         return this.userRepository.save(user);
+    }
+
+    async validate(id: string): Promise<User> {
+        return this.userRepository.findOne(id)
+            .then((user: User) => {
+                if (!user) {
+                    throw new UserDoesntExistsError();
+                }
+                user.isValidated = true;
+                return this.userRepository.save(user);
+            });
     }
 }

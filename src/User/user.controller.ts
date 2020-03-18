@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Post, Body } from '@nestjs/common';
+import { Controller, Get, Req, Post, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { User } from './User';
@@ -7,12 +7,14 @@ import { FeelingService } from '../Feeling/feeling.service';
 import { TemperatureService } from '../Temperature/temperature.service';
 import { IFeelingRequestDto, FeelingRequestDto } from '../dto/FeelingRequestDto';
 import { ITemperatureRequestDto, TemperatureRequestDto } from '../dto/TemperatureRequestDto';
+import { UserDoesntExistsError } from './UserDoesntExistsError';
 
 export enum Routes {
     GET = '/users',
     REGISTER_TEMPERATURE = '/users/temperature',
-    REGISTER_FEELING = '/users/feeling'
-}
+    REGISTER_FEELING = '/users/feeling',
+    VALIDATE = '/users/:id/validate'
+};
 
 @Controller()
 export class UserController {
@@ -45,5 +47,20 @@ export class UserController {
     ) {
         const feelingRequestDto = FeelingRequestDto.createFromRequest(body);
         return this.feelingService.create(feelingRequestDto.type, req.auth)
+    }
+
+    @Post(Routes.VALIDATE)
+    async validate(
+        @Param('id') id: string
+    ): Promise<User | void > {
+        return this.userService.validate(id)
+            .catch((error: Error) => {
+                if (error instanceof UserDoesntExistsError) {
+                    throw new HttpException({
+                        message: error.message,
+                        key: error.key
+                    }, HttpStatus.BAD_REQUEST)
+                }
+            });
     }
 }

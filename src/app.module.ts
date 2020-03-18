@@ -13,7 +13,8 @@ import { InquiryModule, Inquiry } from './Inquiry';
 import { InquiryController, Routes as InquiryRoutes } from './Inquiry/inquiry.controller';
 import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail';
-
+import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
+import { Routes as UserRoutes } from './User/user.controller';
 @Module({
     imports: [
         TypeOrmModule.forRoot({
@@ -52,5 +53,10 @@ export class AppModule {
                 { path: InquiryRoutes.CREATE, method: RequestMethod.POST },
             )
             .forRoutes(InquiryController);
+        consumer
+                .apply(AuthAdminMiddleware)
+                .forRoutes({
+                    path: UserRoutes.VALIDATE, method: RequestMethod.POST
+                })
     }
 }
