@@ -13,6 +13,7 @@ import { InquiryModule, Inquiry } from './Inquiry';
 import { InquiryController, Routes as InquiryRoutes } from './Inquiry/inquiry.controller';
 import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail';
+import { CryptoModule } from './Crypto';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { MailModule } from './Mail';
             url: database.url
         }),
         AuthModule,
+        CryptoModule,
         DoctorModule,
         FeelingModule,
         InquiryModule,

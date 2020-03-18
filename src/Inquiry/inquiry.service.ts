@@ -3,16 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Inquiry } from './Inquiry';
 import { CreateInquiryDto } from '../dto/CreateInquiryDto';
-import { IInquiryListParams, InquiryListParams } from '../dto/InquiryListParams';
+import { InquiryListParams } from '../dto/InquiryListParams';
 import { InquiryRepository } from './inquiry.repository';
-import { ObjectID, ObjectId } from 'mongodb';
-import { FindConditions, FindManyOptions, Not } from 'typeorm';
+import { ObjectId } from 'mongodb';
+import { CryptoService } from '../Crypto';
 
 @Injectable()
 export class InquiryService {
     constructor(
         @InjectRepository(Inquiry)
-        private inquiryRepository: InquiryRepository
+        private inquiryRepository: InquiryRepository,
+        private cryptoService: CryptoService,
     ) {}
 
     async create(inquiryDto: CreateInquiryDto): Promise<Inquiry> {
@@ -20,7 +21,7 @@ export class InquiryService {
         inquiry.age = inquiryDto.age;
         inquiry.email = inquiryDto.email;
         inquiry.speciality = inquiryDto.speciality;
-        inquiry.summary = inquiryDto.summary;
+        inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
         inquiry.privacy = inquiryDto.privacy;
         return this.inquiryRepository.save(inquiry);
@@ -32,7 +33,12 @@ export class InquiryService {
             order: {
                 createdAt: 1
             }
-        });
+        }).then((inquiries: Inquiry[]): Inquiry[] => inquiries.map(
+            (inquiry: Inquiry): Inquiry => {
+                inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+                return inquiry;
+            }
+        ))
     }
 
     async attend(id: string, doctorId: ObjectId): Promise<Inquiry> {
