@@ -3,13 +3,14 @@ import { Controller, Post, Body, HttpException, HttpStatus, Get, Param, Query, R
 import { InquiryService } from './inquiry.service';
 import { Inquiry } from './Inquiry';
 import { CreateInquiryDto, ICreateInquiryDto } from '../dto/CreateInquiryDto';
-import { IInquiryListParams, InquiryListParams, IInquiryListParamsRequest } from '../dto/InquiryListParams';
-import { IRequest } from 'src/Request';
+import { InquiryListParams, IInquiryListParamsRequest } from '../dto/InquiryListParams';
+import { IRequest } from '../Request';
 
 export enum Routes {
     ATTEND = '/inquiries/:id/attend',
     CREATE = '/inquiries',
     GET = '/inquiries',
+    ENCRYPT = '/inquiries/encrypt',
     SOLVE = '/inquiries/:id/solve',
     UNATTEND = '/inquiries/:id/unattend',
 }

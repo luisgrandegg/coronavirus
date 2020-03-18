@@ -7,13 +7,18 @@ import { IAuth } from '../Auth';
 import { RegisterDoctorDto } from '../dto/RegisterDoctorDto';
 import { MailService } from '../Mail';
 import { DoctorMail } from './DoctorMail';
+import { DoctorListParams } from '../dto/DoctorListParams';
+import { UserService, User } from '../User';
+import { UserListParams } from 'src/dto/UserListParams';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class DoctorService {
     constructor(
         @InjectRepository(DoctorRepository)
         private doctorRepository: DoctorRepository,
-        private mailService: MailService
+        private mailService: MailService,
+        private userService: UserService
     ) {}
 
     async create(registerDoctorDto: RegisterDoctorDto, auth: Pick<IAuth, 'userId'>): Promise<Doctor> {
@@ -30,5 +35,28 @@ export class DoctorService {
                 return this.mailService.send(DoctorMail.ceateFromDoctor(savedDoctor))
                     .then(() => savedDoctor);
             });
+    }
+
+    async findByIds(doctorIds: ObjectId[]): Promise<Doctor[]> {
+        return this.doctorRepository.find({
+            where: {
+                $or: doctorIds.map((id: ObjectId) =>({
+                    userId: id
+                }))
+            }
+        });
+    }
+
+    async get(doctorListParams: DoctorListParams): Promise<Doctor[]> {
+        if (doctorListParams.isValidated === true || doctorListParams.isValidated === false) {
+            return this.userService.get(new UserListParams(doctorListParams.isValidated))
+                .then((users: User[]) => this.findByIds(users.map((user: User) => user.id)));
+        }
+        return this.doctorRepository.find({
+            where: { ...doctorListParams.toJSON() },
+            order: {
+                createdAt: 1
+            }
+        });
     }
 }

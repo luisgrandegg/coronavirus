@@ -5,6 +5,8 @@ import { User } from './User';
 import { UserRepository } from './user.repository';
 import { IRegisterUserDto } from '../dto/RegisterUserDto';
 import { UserDoesntExistsError } from './UserDoesntExistsError';
+import { ObjectId } from 'mongodb';
+import { UserListParams } from 'src/dto/UserListParams';
 
 @Injectable()
 export class UserService {
@@ -19,6 +21,19 @@ export class UserService {
 
     async getUserByEmail(email: string): Promise<User> {
         return this.userRepository.findOne({ email });
+    }
+
+    async get(userListParams: UserListParams): Promise<User[]> {
+        return this.userRepository.find({
+            where: { ...userListParams.toJSON() },
+            order: {
+                createdAt: 1
+            }
+        });
+    }
+
+    async findByIds(userIds: ObjectId[], userListParams?: UserListParams): Promise<User[]> {
+        return this.userRepository.findByIds(userIds, { ...userListParams.toJSON() });
     }
 
     async update(user: User): Promise<User> {

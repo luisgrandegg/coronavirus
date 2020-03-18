@@ -5,6 +5,8 @@ import { DoctorService } from './doctor.service';
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
 import { MailModule } from '../Mail';
+import { DoctorController } from './doctor.controller';
+import { UserModule } from 'src/User';
 
 @Module({
     exports: [
@@ -12,9 +14,10 @@ import { MailModule } from '../Mail';
     ],
     imports: [
         TypeOrmModule.forFeature([Doctor, DoctorRepository]),
-        MailModule
+        MailModule,
+        UserModule
     ],
-    controllers: [],
+    controllers: [DoctorController],
     providers: [DoctorService],
 })
 export class DoctorModule {}

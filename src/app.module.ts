@@ -15,6 +15,9 @@ import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail';
 import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
 import { Routes as UserRoutes } from './User/user.controller';
+import { Routes as DoctorRoutes } from './Doctor/doctor.controller';
+import { CryptoModule } from './Crypto';
+
 @Module({
     imports: [
         TypeOrmModule.forRoot({
@@ -32,6 +35,7 @@ import { Routes as UserRoutes } from './User/user.controller';
             url: database.url
         }),
         AuthModule,
+        CryptoModule,
         DoctorModule,
         FeelingModule,
         InquiryModule,
@@ -54,9 +58,10 @@ export class AppModule {
             )
             .forRoutes(InquiryController);
         consumer
-                .apply(AuthAdminMiddleware)
-                .forRoutes({
-                    path: UserRoutes.VALIDATE, method: RequestMethod.POST
-                })
+            .apply(AuthAdminMiddleware)
+            .forRoutes(
+                { path: UserRoutes.VALIDATE, method: RequestMethod.POST },
+                { path: DoctorRoutes.GET, method: RequestMethod.GET }
+            )
     }
 }
