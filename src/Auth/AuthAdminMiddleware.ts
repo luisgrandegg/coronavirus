@@ -18,7 +18,8 @@ export class AuthAdminMiddleware implements NestMiddleware {
         next: NextFunction
     ): Promise<Response | void> {
         const allowedUsers = [
-            UserType.ADMIN
+            UserType.ADMIN,
+            UserType.DOCTOR_ADMIN
         ];
         try {
             const auth = await this.authService.getByToken(req.header('Authorization'));

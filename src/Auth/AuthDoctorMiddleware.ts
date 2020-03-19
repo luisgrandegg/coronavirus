@@ -18,7 +18,8 @@ export class AuthDoctorMiddleware implements NestMiddleware {
         next: NextFunction
     ): Promise<Response | void> {
         const allowedUsers = [
-            UserType.DOCTOR
+            UserType.DOCTOR,
+            UserType.DOCTOR_ADMIN
         ];
         try {
             const auth = await this.authService.getByToken(req.header('Authorization'));
