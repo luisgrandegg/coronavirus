@@ -50,7 +50,8 @@ export class DoctorService {
     async get(doctorListParams: DoctorListParams): Promise<Doctor[]> {
         if (doctorListParams.isValidated === true || doctorListParams.isValidated === false) {
             return this.userService.get(new UserListParams(doctorListParams.isValidated))
-                .then((users: User[]) => this.findByIds(users.map((user: User) => user.id)));
+                .then((users: User[]) => this.findByIds(users.map((user: User) => user.id)))
+                .catch(() => []);
         }
         return this.doctorRepository.find({
             where: { ...doctorListParams.toJSON() },
@@ -58,5 +59,13 @@ export class DoctorService {
                 createdAt: 1
             }
         });
+    }
+
+    async validate(doctorId: string): Promise<Doctor> {
+        return this.doctorRepository.findOne(doctorId)
+            .then((doctor: Doctor) => {
+                this.userService.validate(doctor.userId.toHexString());
+                return doctor;
+            })
     }
 }

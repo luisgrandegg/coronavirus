@@ -15,8 +15,9 @@ import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail';
 import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
 import { Routes as UserRoutes } from './User/user.controller';
-import { Routes as DoctorRoutes } from './Doctor/doctor.controller';
+import { Routes as DoctorRoutes, DoctorController } from './Doctor/doctor.controller';
 import { CryptoModule } from './Crypto';
+import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { CryptoModule } from './Crypto';
                 Doctor,
                 Feeling,
                 Inquiry,
+                InquiryAudit,
                 Temperature,
                 User
             ],
@@ -39,6 +41,7 @@ import { CryptoModule } from './Crypto';
         DoctorModule,
         FeelingModule,
         InquiryModule,
+        InquiryAuditModule,
         MailModule,
         TemperatureModule,
         UserModule
@@ -60,8 +63,10 @@ export class AppModule {
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(
-                { path: UserRoutes.VALIDATE, method: RequestMethod.POST },
-                { path: DoctorRoutes.GET, method: RequestMethod.GET }
+                { path: UserRoutes.VALIDATE, method: RequestMethod.POST }
             )
+        consumer
+            .apply(AuthAdminMiddleware)
+            .forRoutes(DoctorController)
     }
 }

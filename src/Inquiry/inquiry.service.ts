@@ -7,6 +7,7 @@ import { InquiryListParams } from '../dto/InquiryListParams';
 import { InquiryRepository } from './inquiry.repository';
 import { ObjectId } from 'mongodb';
 import { CryptoService } from '../Crypto';
+import { InquiryAuditService, InquiryAuditAction } from '../InquiryAudit';
 
 @Injectable()
 export class InquiryService {
@@ -14,6 +15,7 @@ export class InquiryService {
         @InjectRepository(Inquiry)
         private inquiryRepository: InquiryRepository,
         private cryptoService: CryptoService,
+        private inquiryAuditService: InquiryAuditService
     ) {}
 
     async create(inquiryDto: CreateInquiryDto): Promise<Inquiry> {
@@ -24,7 +26,9 @@ export class InquiryService {
         inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
         inquiry.privacy = inquiryDto.privacy;
-        return this.inquiryRepository.save(inquiry);
+        return this.inquiryRepository.save(inquiry)
+            .then((inquiry: Inquiry) =>
+                this.inquiryAuditService.create(inquiry, InquiryAuditAction.CREATE).then(() => inquiry));
     }
 
     async get(inquiryListParams: InquiryListParams): Promise<Inquiry[]> {
@@ -42,21 +46,29 @@ export class InquiryService {
         ))
     }
 
-    async attend(id: string, doctorId: ObjectId): Promise<Inquiry> {
+    async attend(id: string, userId: ObjectId): Promise<Inquiry> {
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
                 inquiry.attended = true;
-                inquiry.doctorId = doctorId;
+                inquiry.doctorId = userId;
                 return this.inquiryRepository.save(inquiry)
+                    .then((inquiry: Inquiry) =>
+                        this.inquiryAuditService.create(
+                            inquiry, InquiryAuditAction.ASSIGN, userId
+                        ).then(() => inquiry));
             });
     }
 
-    async unattend(id: string): Promise<Inquiry> {
+    async unattend(id: string, userId: ObjectId): Promise<Inquiry> {
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
                 inquiry.attended = false;
                 delete inquiry.doctorId;
-                return this.inquiryRepository.save(inquiry);
+                return this.inquiryRepository.save(inquiry)
+                .then((inquiry: Inquiry) =>
+                    this.inquiryAuditService.create(
+                        inquiry, InquiryAuditAction.UNASSIGN, userId
+                    ).then(() => inquiry));
             })
     }
 

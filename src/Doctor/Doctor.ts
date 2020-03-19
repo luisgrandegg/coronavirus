@@ -11,6 +11,7 @@ export interface IDoctor {
     email: string;
     phone: string;
     updatedAt: Date;
+    id: string;
 }
 
 @Entity()
@@ -61,7 +62,8 @@ export class Doctor {
             license: this.license,
             email: this.email,
             phone: this.phone,
-            updatedAt: this.updatedAt
+            updatedAt: this.updatedAt,
+            id: this.id.toHexString()
         };
     }
 }

@@ -66,7 +66,7 @@ export class InquiryController {
         @Param('id') id: string,
         @Req() req: IRequest
     ): Promise<Inquiry> {
-        return this.inquiryService.unattend(id);
+        return this.inquiryService.unattend(id, req.auth.userId);
     }
 
     @Post(Routes.SOLVE)
