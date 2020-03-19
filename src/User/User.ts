@@ -53,6 +53,12 @@ export class User {
     })
     isValidated: boolean
 
+    @IsBoolean()
+    @Column({
+        default: true
+    })
+    isActive: boolean
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -73,6 +79,11 @@ export class User {
         } else {
             this.isValidated = false;
         }
+    }
+
+    @BeforeInsert()
+    setIsActive(): void {
+        this.isActive = true;
     }
 
     @BeforeInsert()

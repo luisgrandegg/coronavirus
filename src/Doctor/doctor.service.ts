@@ -48,8 +48,11 @@ export class DoctorService {
     }
 
     async get(doctorListParams: DoctorListParams): Promise<Doctor[]> {
-        if (doctorListParams.isValidated === true || doctorListParams.isValidated === false) {
-            return this.userService.get(new UserListParams(doctorListParams.isValidated))
+        if (
+            doctorListParams.isActive === true || doctorListParams.isActive === false,
+            doctorListParams.isValidated === true || doctorListParams.isValidated === false
+        ) {
+            return this.userService.get(new UserListParams(doctorListParams.isActive, doctorListParams.isValidated))
                 .then((users: User[]) => this.findByIds(users.map((user: User) => user.id)))
                 .catch(() => []);
         }

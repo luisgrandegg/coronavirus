@@ -5,7 +5,9 @@ import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional } from 'class-valida
 export enum InquiryAuditAction {
     CREATE = 'create',
     ASSIGN = 'assign',
-    UNASSIGN = 'unassign'
+    UNASSIGN = 'unassign',
+    FLAG = 'flag',
+    UNFLAG = 'unflag'
 }
 
 export interface IInquiryAudit {

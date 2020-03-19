@@ -13,7 +13,8 @@ export enum Routes {
     GET = '/users',
     REGISTER_TEMPERATURE = '/users/temperature',
     REGISTER_FEELING = '/users/feeling',
-    VALIDATE = '/users/:id/validate'
+    VALIDATE = '/users/:id/validate',
+    DEACTIVATE = '/users/:id/deactivate'
 };
 
 @Controller()
@@ -54,6 +55,21 @@ export class UserController {
         @Param('id') id: string
     ): Promise<User | void > {
         return this.userService.validate(id)
+            .catch((error: Error) => {
+                if (error instanceof UserDoesntExistsError) {
+                    throw new HttpException({
+                        message: error.message,
+                        key: error.key
+                    }, HttpStatus.BAD_REQUEST)
+                }
+            });
+    }
+
+    @Post(Routes.DEACTIVATE)
+    async deactivate(
+        @Param('id') id: string
+    ): Promise<User | void> {
+        return this.userService.deactivate(id)
             .catch((error: Error) => {
                 if (error instanceof UserDoesntExistsError) {
                     throw new HttpException({

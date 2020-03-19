@@ -15,7 +15,7 @@ import { UserRepository } from './user.repository';
     imports: [
         TypeOrmModule.forFeature([User, UserRepository]),
         FeelingModule,
-        TemperatureModule,
+        TemperatureModule
     ],
     controllers: [UserController],
     providers: [UserService],

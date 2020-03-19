@@ -65,10 +65,10 @@ export class InquiryService {
                 inquiry.attended = false;
                 delete inquiry.doctorId;
                 return this.inquiryRepository.save(inquiry)
-                .then((inquiry: Inquiry) =>
-                    this.inquiryAuditService.create(
-                        inquiry, InquiryAuditAction.UNASSIGN, userId
-                    ).then(() => inquiry));
+                    .then((inquiry: Inquiry) =>
+                        this.inquiryAuditService.create(
+                            inquiry, InquiryAuditAction.UNASSIGN, userId
+                        ).then(() => inquiry));
             })
     }
 
@@ -82,14 +82,27 @@ export class InquiryService {
             });
     }
 
-    async encrypt(): Promise<Inquiry[]> {
-        return this.inquiryRepository.find()
-            .then((inquiries: Inquiry[]) => {
-                return inquiries.map((inquiry: Inquiry): any => {
-                    inquiry.summary = this.cryptoService.encrypt(inquiry.summary);
-                    inquiry.email = this.cryptoService.encrypt(inquiry.email);
-                    return this.inquiryRepository.save(inquiry);
-                })
+    async flag(id: string, userId: ObjectId): Promise<Inquiry> {
+        return this.inquiryRepository.findOne(id)
+            .then((inquiry: Inquiry) => {
+                inquiry.flagged = true;
+                return this.inquiryRepository.save(inquiry)
+                    .then((inquiry: Inquiry) =>
+                        this.inquiryAuditService.create(
+                            inquiry, InquiryAuditAction.FLAG, userId
+                        ).then(() => inquiry));
+            })
+    }
+
+    async unflag(id: string, userId: ObjectId): Promise<Inquiry> {
+        return this.inquiryRepository.findOne(id)
+            .then((inquiry: Inquiry) => {
+                inquiry.flagged = false;
+                return this.inquiryRepository.save(inquiry)
+                    .then((inquiry: Inquiry) =>
+                        this.inquiryAuditService.create(
+                            inquiry, InquiryAuditAction.UNFLAG, userId
+                        ).then(() => inquiry));
             })
     }
 }

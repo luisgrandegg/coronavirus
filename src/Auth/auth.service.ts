@@ -10,6 +10,7 @@ import { DoctorService, Doctor } from '../Doctor';
 import { AuthError } from './AuthError';
 import { UserDoesntExistsError } from '../User/UserDoesntExistsError';
 import { UserExistsError } from '../User/UserExistsError';
+import { ObjectID } from 'mongodb';
 
 @Injectable()
 export class AuthService {
@@ -51,6 +52,13 @@ export class AuthService {
                 return dbUser;
             })
             .then((dbUser: User) => {
+                if (dbUser.isActive === false) {
+                    throw new AuthError();
+                }
+
+                return dbUser;
+            })
+            .then((dbUser: User) => {
                 if (
                     (verifyPassword && !dbUser.verifyPassword(loginDto.password)) ||
                     !dbUser.isValidated
@@ -78,6 +86,17 @@ export class AuthService {
             });
     }
 
+    async removeByUserId(userId: string): Promise<Auth | void> {
+        return this.authRepository.findOne({
+            userId: ObjectID.createFromHexString(userId)
+        })
+        .then((authorization: Auth) => {
+            if (authorization) {
+                return this.authRepository.remove(authorization);
+            }
+        })
+    }
+
     async logout(token: string): Promise<void> {
         return this.authRepository.findOne({
                 token: token
@@ -98,5 +117,10 @@ export class AuthService {
             })
             .then(() => this.userService.register(registerDoctorDto)
             .then((user: User) => this.doctorService.create(registerDoctorDto, { userId: user.id})));
+    }
+
+    async deactivate(userId: string): Promise<User> {
+        return this.removeByUserId(userId)
+            .then((auth: Auth) => this.userService.deactivate(auth.userId.toHexString()));
     }
 }

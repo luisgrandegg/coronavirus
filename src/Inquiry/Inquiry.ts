@@ -62,6 +62,12 @@ export class Inquiry {
     })
     solved: boolean;
 
+    @IsBoolean()
+    @Column({
+        default: false
+    })
+    flagged: boolean;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -71,6 +77,7 @@ export class Inquiry {
     @BeforeInsert()
     setSolved(): void {
         this.attended = false;
+        this.flagged = false;
         this.solved = false;
     }
 

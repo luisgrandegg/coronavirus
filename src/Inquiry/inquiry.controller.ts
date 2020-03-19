@@ -12,6 +12,8 @@ export enum Routes {
     GET = '/inquiries',
     ENCRYPT = '/inquiries/encrypt',
     SOLVE = '/inquiries/:id/solve',
+    FLAG = '/inquiries/:id/flag',
+    UNFLAG = '/inquiries/:id/unflag',
     UNATTEND = '/inquiries/:id/unattend',
 }
 
@@ -75,6 +77,22 @@ export class InquiryController {
         @Req() req: IRequest
     ): Promise<Inquiry> {
         return this.inquiryService.solve(id, req.auth.userId.toHexString());
+    }
+
+    @Post(Routes.FLAG)
+    flag(
+        @Param('id') id: string,
+        @Req() req: IRequest
+    ): Promise<Inquiry> {
+        return this.inquiryService.flag(id, req.auth.userId);
+    }
+
+    @Post(Routes.UNFLAG)
+    unflag(
+        @Param('id') id: string,
+        @Req() req: IRequest
+    ): Promise<Inquiry> {
+        return this.inquiryService.unflag(id, req.auth.userId);
     }
 
     @Get(Routes.GET)

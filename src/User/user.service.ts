@@ -6,13 +6,14 @@ import { UserRepository } from './user.repository';
 import { IRegisterUserDto } from '../dto/RegisterUserDto';
 import { UserDoesntExistsError } from './UserDoesntExistsError';
 import { ObjectId } from 'mongodb';
-import { UserListParams } from 'src/dto/UserListParams';
+import { UserListParams } from '../dto/UserListParams';
+import { AuthService } from '../Auth';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserRepository)
-        private userRepository: UserRepository,
+        private userRepository: UserRepository
     ) {}
 
     async getUserById(userId: string): Promise<User> {
@@ -48,6 +49,7 @@ export class UserService {
         user.privacy = registerUserDto.privacy;
         user.type = registerUserDto.userType;
         user.isValidated = false;
+        user.isActive = true;
         return this.userRepository.save(user);
     }
 
@@ -58,6 +60,17 @@ export class UserService {
                     throw new UserDoesntExistsError();
                 }
                 user.isValidated = true;
+                return this.userRepository.save(user);
+            });
+    }
+
+    async deactivate(id: string): Promise<User> {
+        return this.userRepository.findOne(id)
+            .then((user: User) => {
+                if (!user) {
+                    throw new UserDoesntExistsError();
+                }
+                user.isActive = false;
                 return this.userRepository.save(user);
             });
     }

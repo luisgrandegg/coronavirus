@@ -63,7 +63,8 @@ export class AppModule {
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(
-                { path: UserRoutes.VALIDATE, method: RequestMethod.POST }
+                { path: UserRoutes.VALIDATE, method: RequestMethod.POST },
+                { path: UserRoutes.DEACTIVATE, method: RequestMethod.POST }
             )
         consumer
             .apply(AuthAdminMiddleware)
