@@ -3,6 +3,8 @@ import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, Bef
 import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional } from 'class-validator';
 
 export enum InquiryAuditAction {
+    ACTIVATE = 'activate',
+    DEACTIVATE = 'deactivate',
     CREATE = 'create',
     ASSIGN = 'assign',
     UNASSIGN = 'unassign',

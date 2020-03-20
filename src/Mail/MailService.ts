@@ -3,7 +3,7 @@ import * as SendgridMail from '@sendgrid/mail';
 
 import { Mail } from './Mail';
 
-import { mailer, server } from '../config';
+import { mailer } from '../config';
 
 @Injectable()
 export class MailService {
@@ -12,17 +12,20 @@ export class MailService {
     }
 
     async send(mail: Mail): Promise<any> {
+        if (!mailer.apiKey) {
+            return;
+        }
         if (!mail.from) {
             mail.from = mailer.from;
         }
-        mail.dynamicTemplateData.domain = server.domain;
         mail.templateId = this.getTemplateId(mail);
-
         return SendgridMail.send(mail.toJson());
     }
 
     private configure(): void {
-        SendgridMail.setApiKey(mailer.apiKey);
+        if (mailer.apiKey) {
+            SendgridMail.setApiKey(mailer.apiKey);
+        }
     }
 
     private getTemplateId(mail: Mail): string {

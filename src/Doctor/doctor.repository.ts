@@ -17,8 +17,8 @@ export class DoctorRepository extends Repository<Doctor> {
         return this.findOne(doctorId);
     }
 
-    async findByUserId(userId: ObjectID): Promise<Doctor[]> {
-        return this.find({
+    async findByUserId(userId: ObjectID): Promise<Doctor> {
+        return this.findOne({
             userId
         });
     }

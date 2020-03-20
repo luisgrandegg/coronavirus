@@ -46,14 +46,24 @@ import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
 export class AppModule {
     configure(consumer: MiddlewareConsumer): void {
         consumer
-            .apply(IsAuthorizedMiddleware)
-            .forRoutes(UserController);
-        consumer
             .apply(AuthDoctorMiddleware)
-            .exclude(
-                { path: InquiryRoutes.CREATE, method: RequestMethod.POST },
-            )
-            .forRoutes(InquiryController);
+            .forRoutes(
+                { path: InquiryRoutes.GET, method: RequestMethod.GET },
+                { path: InquiryRoutes.GET_ONE, method: RequestMethod.GET },
+                { path: InquiryRoutes.ATTEND, method: RequestMethod.POST },
+                { path: InquiryRoutes.UNATTEND, method: RequestMethod.POST },
+                { path: InquiryRoutes.FLAG, method: RequestMethod.POST }
+            );
+        consumer
+            .apply(AuthAdminMiddleware)
+            .forRoutes(
+                { path: InquiryRoutes.UNFLAG, method: RequestMethod.POST },
+                { path: InquiryRoutes.SOLVE, method: RequestMethod.POST },
+                { path: InquiryRoutes.ACTIVATE, method: RequestMethod.POST },
+                { path: InquiryRoutes.DEACTIVATE, method: RequestMethod.POST },
+                { path: InquiryRoutes.MIGRATE, method: RequestMethod.POST }
+
+            );
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(UserController)

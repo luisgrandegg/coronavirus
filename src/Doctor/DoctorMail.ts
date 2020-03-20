@@ -1,14 +1,9 @@
 import { Mail } from '../Mail';
 
-import { Doctor } from './Doctor';
-
-export class DoctorMail extends Mail {
-    static ceateFromDoctor(doctor: Doctor): DoctorMail {
-        return new DoctorMail(
-            {
-                email: doctor.email,
-                license: doctor.license
-            },
+export class NewDoctorMail extends Mail {
+    static createFromDoctor(): NewDoctorMail {
+        return new NewDoctorMail(
+            {},
             'pati@citamedicaencasa.com',
         );
     }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as PubSub from 'pubsub-js';
 
 import { User } from './User';
 import { UserRepository } from './user.repository';
@@ -7,7 +8,7 @@ import { IRegisterUserDto } from '../dto/RegisterUserDto';
 import { UserDoesntExistsError } from './UserDoesntExistsError';
 import { ObjectId } from 'mongodb';
 import { UserListParams } from '../dto/UserListParams';
-import { AuthService } from '../Auth';
+import { UserEvents } from './UserEvents';
 
 @Injectable()
 export class UserService {
@@ -55,12 +56,19 @@ export class UserService {
 
     async validate(id: string): Promise<User> {
         return this.userRepository.findOne(id)
-            .then((user: User) => {
+            .then(async (user: User) => {
                 if (!user) {
                     throw new UserDoesntExistsError();
                 }
                 user.isValidated = true;
-                return this.userRepository.save(user);
+                return this.userRepository.save(user)
+                    .then(() => {
+                        PubSub.publish(
+                            UserEvents.USER_VALIDATION,
+                            user
+                        );
+                        return user;
+                    });
             });
     }
 

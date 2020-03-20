@@ -5,6 +5,8 @@ export interface IInquiryListParams {
     speciality?: string;
     attended?: boolean;
     solved?: boolean;
+    active?: boolean;
+    flagged?: boolean;
 }
 
 export interface IInquiryListParamsRequest {
@@ -12,6 +14,8 @@ export interface IInquiryListParamsRequest {
     speciality?: string;
     attended?: string;
     solved?: string;
+    active?: string;
+    flagged?: string;
 }
 
 export class InquiryListParams {
@@ -26,6 +30,12 @@ export class InquiryListParams {
                 undefined,
             request.solved === 'false' ? false :
                 request.solved === 'true' ? true :
+                undefined,
+            request.active === 'false' ? false :
+                request.active === 'true' ? true :
+                undefined,
+            request.flagged === 'false' ? false :
+                request.flagged === 'true' ? true :
                 undefined
         );
     }
@@ -34,7 +44,9 @@ export class InquiryListParams {
         public doctorId?: ObjectId,
         public speciality?: string,
         public attended?: boolean,
-        public solved?: boolean
+        public solved?: boolean,
+        public active?: boolean,
+        public flagged?: boolean
     ) {}
 
     toJSON(): IInquiryListParams {
@@ -50,6 +62,12 @@ export class InquiryListParams {
         }
         if (this.solved === true || this.solved === false) {
             params.solved = this.solved;
+        }
+        if (this.active === true || this.active === false) {
+            params.active = this.active;
+        }
+        if (this.flagged === true || this.flagged === false) {
+            params.flagged = this.flagged;
         }
         return params;
     }

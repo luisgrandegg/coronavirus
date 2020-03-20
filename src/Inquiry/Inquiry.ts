@@ -14,6 +14,8 @@ export interface IInquiry {
     privacy: boolean;
     attended: boolean;
     solved: boolean;
+    flagged: boolean;
+    active: boolean;
     updatedAt: Date;
 }
 
@@ -68,6 +70,12 @@ export class Inquiry {
     })
     flagged: boolean;
 
+    @IsBoolean()
+    @Column({
+        default: true
+    })
+    active: boolean;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -76,6 +84,7 @@ export class Inquiry {
 
     @BeforeInsert()
     setSolved(): void {
+        this.active = true;
         this.attended = false;
         this.flagged = false;
         this.solved = false;
@@ -94,7 +103,9 @@ export class Inquiry {
             privacy: this.privacy,
             attended: this.attended,
             solved: this.solved,
-            updatedAt: this.updatedAt
+            updatedAt: this.updatedAt,
+            active: this.active,
+            flagged: this.flagged
         };
     }
 }

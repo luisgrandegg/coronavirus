@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as PubSub from 'pubsub-js';
 
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
 import { IAuth } from '../Auth';
 import { RegisterDoctorDto } from '../dto/RegisterDoctorDto';
 import { MailService } from '../Mail';
-import { DoctorMail } from './DoctorMail';
+import { NewDoctorMail } from './DoctorMail';
 import { DoctorListParams } from '../dto/DoctorListParams';
-import { UserService, User } from '../User';
+import { UserService, User, UserType } from '../User';
 import { UserListParams } from 'src/dto/UserListParams';
 import { ObjectId } from 'mongodb';
+import { DoctorValidationMail } from './DoctorValidationMail';
+import { UserEvents } from 'src/User/UserEvents';
 
 @Injectable()
 export class DoctorService {
@@ -19,7 +22,22 @@ export class DoctorService {
         private doctorRepository: DoctorRepository,
         private mailService: MailService,
         private userService: UserService
-    ) {}
+    ) {
+        PubSub.subscribe(
+            UserEvents.USER_VALIDATION,
+            (_msg: string, user: User) => {
+                if (
+                    user.type !== UserType.DOCTOR &&
+                    user.type !== UserType.DOCTOR_ADMIN
+                ) {
+                    return;
+                }
+                this.doctorRepository.findByUserId(user.id)
+                    .then((doctor: Doctor) => {
+                        this.mailService.send(DoctorValidationMail.createFromDoctor(doctor));
+                    })
+            });
+    }
 
     async create(registerDoctorDto: RegisterDoctorDto, auth: Pick<IAuth, 'userId'>): Promise<Doctor> {
         const doctor = this.doctorRepository.create();
@@ -32,7 +50,7 @@ export class DoctorService {
         doctor.userId = auth.userId;
         return this.doctorRepository.save(doctor)
             .then(async (savedDoctor: Doctor) => {
-                return this.mailService.send(DoctorMail.ceateFromDoctor(savedDoctor))
+                return this.mailService.send(NewDoctorMail.createFromDoctor())
                     .then(() => savedDoctor);
             });
     }
