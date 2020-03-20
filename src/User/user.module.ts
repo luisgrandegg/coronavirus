@@ -4,8 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './User';
-import { FeelingModule } from '../Feeling';
-import { TemperatureModule } from '../Temperature';
 import { UserRepository } from './user.repository';
 
 @Module({
@@ -13,9 +11,7 @@ import { UserRepository } from './user.repository';
         UserService
     ],
     imports: [
-        TypeOrmModule.forFeature([User, UserRepository]),
-        FeelingModule,
-        TemperatureModule
+        TypeOrmModule.forFeature([User, UserRepository])
     ],
     controllers: [UserController],
     providers: [UserService],

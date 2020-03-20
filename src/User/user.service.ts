@@ -64,6 +64,28 @@ export class UserService {
             });
     }
 
+    async invalidate(id: string): Promise<User> {
+        return this.userRepository.findOne(id)
+            .then((user: User) => {
+                if (!user) {
+                    throw new UserDoesntExistsError();
+                }
+                user.isValidated = false;
+                return this.userRepository.save(user);
+            });
+    }
+
+    async activate(id: string): Promise<User> {
+        return this.userRepository.findOne(id)
+            .then((user: User) => {
+                if (!user) {
+                    throw new UserDoesntExistsError();
+                }
+                user.isActive = true;
+                return this.userRepository.save(user);
+            });
+    }
+
     async deactivate(id: string): Promise<User> {
         return this.userRepository.findOne(id)
             .then((user: User) => {

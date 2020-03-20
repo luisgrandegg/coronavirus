@@ -5,8 +5,6 @@ import { AppController } from './app.controller';
 import { AuthModule, Auth } from './Auth';
 import { UserModule, User, UserController } from './User';
 import { database } from './config';
-import { Feeling, FeelingModule } from './Feeling';
-import { Temperature, TemperatureModule } from './Temperature';
 import { IsAuthorizedMiddleware } from './Auth/AuthMiddleware';
 import { DoctorModule, Doctor } from './Doctor';
 import { InquiryModule, Inquiry } from './Inquiry';
@@ -25,10 +23,8 @@ import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
             entities: [
                 Auth,
                 Doctor,
-                Feeling,
                 Inquiry,
                 InquiryAudit,
-                Temperature,
                 User
             ],
             logging: false,
@@ -39,11 +35,9 @@ import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
         AuthModule,
         CryptoModule,
         DoctorModule,
-        FeelingModule,
         InquiryModule,
         InquiryAuditModule,
         MailModule,
-        TemperatureModule,
         UserModule
     ],
     controllers: [AppController],
@@ -62,10 +56,7 @@ export class AppModule {
             .forRoutes(InquiryController);
         consumer
             .apply(AuthAdminMiddleware)
-            .forRoutes(
-                { path: UserRoutes.VALIDATE, method: RequestMethod.POST },
-                { path: UserRoutes.DEACTIVATE, method: RequestMethod.POST }
-            )
+            .forRoutes(UserController)
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(DoctorController)

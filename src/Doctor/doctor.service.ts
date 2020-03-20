@@ -63,12 +63,4 @@ export class DoctorService {
             }
         });
     }
-
-    async validate(doctorId: string): Promise<Doctor> {
-        return this.doctorRepository.findOne(doctorId)
-            .then((doctor: Doctor) => {
-                this.userService.validate(doctor.userId.toHexString());
-                return doctor;
-            })
-    }
 }
