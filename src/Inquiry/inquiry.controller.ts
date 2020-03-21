@@ -56,6 +56,19 @@ export class InquiryController {
                 ]
             }, HttpStatus.BAD_REQUEST);
         }
+
+        if (!inquiryDto.confirmAge) {
+            throw new HttpException({
+                message: 'ValidationError',
+                key: 'VALIDATION_ERROR',
+                validationErrors: [
+                    {
+                        property: 'confirmAge',
+                    }
+                ]
+            }, HttpStatus.BAD_REQUEST);
+        }
+
         return this.inquiryService.create(inquiryDto);
     }
 

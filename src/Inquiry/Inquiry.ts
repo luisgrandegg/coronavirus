@@ -53,6 +53,10 @@ export class Inquiry {
     privacy: boolean;
 
     @IsBoolean()
+    @Column()
+    confirmAge: boolean;
+
+    @IsBoolean()
     @Column({
         default: false
     })

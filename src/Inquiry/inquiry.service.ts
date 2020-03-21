@@ -37,6 +37,7 @@ export class InquiryService {
         inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
         inquiry.privacy = inquiryDto.privacy;
+        inquiry.confirmAge = inquiryDto.confirmAge;
         return this.inquiryRepository.save(inquiry)
             .then((inquiry: Inquiry) =>
                 this.inquiryAuditService.create(inquiry, InquiryAuditAction.CREATE).then(() => inquiry));
