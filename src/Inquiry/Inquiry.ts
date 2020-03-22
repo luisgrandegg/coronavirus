@@ -1,6 +1,7 @@
 import { ObjectID } from 'mongodb';
 import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional } from 'class-validator';
+import { DoctorType } from '../Doctor/Doctor';
 
 export enum InquiryPagination {
     PER_PAGE = 100
@@ -12,7 +13,8 @@ export interface IInquiry {
     age: number;
     email: string;
     id: string;
-    speciality: string;
+    doctorTpe: DoctorType;
+    speciality?: string;
     summary: string;
     terms: boolean;
     time: string;
@@ -41,9 +43,14 @@ export class Inquiry {
     @Column()
     email: string;
 
+    @IsOptional()
     @IsString()
     @Column()
     speciality: string;
+
+    @IsString()
+    @Column()
+    doctorType: DoctorType;
 
     @IsString()
     @Column()
@@ -119,7 +126,8 @@ export class Inquiry {
             solved: this.solved,
             updatedAt: this.updatedAt,
             active: this.active,
-            flagged: this.flagged
+            flagged: this.flagged,
+            doctorTpe: this.doctorType
         };
     }
 }

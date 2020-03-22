@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { InquiryAuditRepository } from './inquiry-audit.repository';
 import { InquiryAudit, InquiryAuditAction } from './InquiryAudit';
-import { Inquiry } from '../Inquiry';
+import { Inquiry } from '../Inquiry/Inquiry';
 import { ObjectId } from 'mongodb';
 import { InquiryAuditWorker } from './inquiry-audit.worker';
 

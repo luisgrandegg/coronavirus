@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { Auth } from './Auth';
 import { ILoginDto, LoginDto } from '../dto/LoginDto';
 import { RegisterDoctorDto, IRegisterDoctorDto } from '../dto/RegisterDoctorDto';
-import { Doctor } from '../Doctor';
+import { Doctor } from '../Doctor/Doctor';
 import { UserExistsError } from '../User/UserExistsError';
 import { UserDoesntExistsError } from '../User/UserDoesntExistsError';
 import { AuthError } from './AuthError';

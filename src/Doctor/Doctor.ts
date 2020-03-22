@@ -2,10 +2,15 @@ import { ObjectID } from 'mongodb';
 import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { IsString, IsOptional, IsEmail, IsNumber } from 'class-validator';
 
+export enum DoctorType {
+    REGULAR = 'regular',
+    PSYCHOLOGIST = 'psychologist'
+}
 export interface IDoctor {
     createdAt: Date;
     name: string;
     surname: string;
+    doctorType: DoctorType;
     speciality: string;
     license: string;
     email: string;
@@ -32,6 +37,10 @@ export class Doctor {
     @IsString()
     @Column()
     surname: string;
+
+    @IsString()
+    @Column()
+    doctorType: DoctorType;
 
     @IsString()
     @IsOptional()
@@ -79,7 +88,8 @@ export class Doctor {
             inquiriesAttended: this.inquiriesAttended,
             id: this.id.toHexString(),
             userId: this.userId.toHexString(),
-            comment: this.comment
+            comment: this.comment,
+            doctorType: this.doctorType
         };
     }
 }

@@ -3,10 +3,8 @@ import * as PubSub from 'pubsub-js';
 import { StatService } from "./stat.service";
 import { InquiryEvents } from '../Inquiry/InquiryEvents';
 import { StatType, StatPeriod } from './Stat';
-import { DoctorEvents } from 'src/Doctor/DoctorEvents';
 import { UserEvents, IUserEventData } from 'src/User/UserEvents';
-import { userInfo } from 'os';
-import { UserType } from 'src/User';
+import { UserType } from '../User/User';
 
 export class StatWorker {
     constructor(

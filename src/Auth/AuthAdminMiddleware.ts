@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { IRequest } from '../Request';
 import { AuthService } from './auth.service';
-import { UserType } from '../User';
+import { UserType } from '../User/User';
 import { AuthError } from './AuthError';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
-import { IAuth } from '../Auth';
+import { IAuth } from '../Auth/Auth';
 import { RegisterDoctorDto } from '../dto/RegisterDoctorDto';
 import { DoctorListParams } from '../dto/DoctorListParams';
 import { User } from '../User';
@@ -32,6 +32,8 @@ export class DoctorService {
         doctor.email = registerDoctorDto.email;
         doctor.phone = registerDoctorDto.phone;
         doctor.userId = auth.userId;
+        doctor.doctorType = registerDoctorDto.doctorType;
+
         return this.doctorRepository.save(doctor);
     }
 

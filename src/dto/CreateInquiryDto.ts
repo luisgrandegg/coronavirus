@@ -1,3 +1,4 @@
+import { DoctorType } from "../Doctor/Doctor";
 
 
 export interface ICreateInquiryDto {
@@ -9,6 +10,7 @@ export interface ICreateInquiryDto {
     time: string;
     privacy: boolean;
     confirmAge: boolean;
+    doctorType: string;
 }
 
 export class CreateInquiryDto {
@@ -24,6 +26,7 @@ export class CreateInquiryDto {
             request.time,
             request.privacy,
             request.confirmAge,
+            request.doctorType as DoctorType
         );
     }
 
@@ -35,6 +38,7 @@ export class CreateInquiryDto {
         public terms: boolean,
         public time: string,
         public privacy: boolean,
-        public confirmAge: boolean
+        public confirmAge: boolean,
+        public doctorType: DoctorType
     ) { }
 }

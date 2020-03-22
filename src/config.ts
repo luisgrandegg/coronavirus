@@ -11,9 +11,8 @@ export const mailer = {
     apiKey: process.env.MAILING_API_KEY,
     from: process.env.MAILING_FROM || 'pati@citamedicaencasa.com',
     templates: {
-        newDoctor: process.env.MAILING_TEMPLATES_NEW_DOCTOR || 'd-9f7405f0fd8b472c9c14eeb30d0a8d8c',
         doctorValidation: process.env.MAILING_TEMPLATES_DOCTOR_VALIDATION || 'd-4dda00767eb94de482469e2cb180815b',
-        inquiryReported: process.env.MAILING_TEMPLATES_INQUIRY_REPORTED || 'd-7cae476b55484743990d41e2363317ac'
+        psychologistValidation: process.env.MAILING_TEMPLATES_PSYCHOLOGIST_VALIDATION || 'd-c539c325e9ba40e48e94c962b75d06ee'
     }
 };
 

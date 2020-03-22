@@ -1,5 +1,6 @@
 import { ObjectID, ObjectId } from "mongodb";
 import { InquiryPagination } from "../Inquiry";
+import { DoctorType } from "../Doctor";
 
 export interface ISpecialities {
     '$in': string[];
@@ -15,6 +16,7 @@ export interface IInquiryListParams {
     flagged?: boolean;
     page?: number;
     perPage?: number;
+    doctorType?: DoctorType;
 }
 
 export interface IInquiryListParamsRequest {
@@ -31,7 +33,8 @@ export interface IInquiryListParamsRequest {
 
 export class InquiryListParams {
     static createFromRequest(
-        request: IInquiryListParamsRequest
+        request: IInquiryListParamsRequest,
+        doctorType: DoctorType
     ): InquiryListParams {
         return new InquiryListParams(
             request.doctorId ? ObjectID.createFromHexString(request.doctorId) : undefined,
@@ -50,7 +53,8 @@ export class InquiryListParams {
                 request.flagged === 'true' ? true :
                     undefined,
             request.page ? parseInt(request.page) : 1,
-            request.perPage ? parseInt(request.perPage) : InquiryPagination.PER_PAGE
+            request.perPage ? parseInt(request.perPage) : InquiryPagination.PER_PAGE,
+            doctorType
         );
     }
 
@@ -63,8 +67,9 @@ export class InquiryListParams {
         public active?: boolean,
         public flagged?: boolean,
         public page?: number,
-        public perPage?: number
-    ) { }
+        public perPage?: number,
+        public doctorType?: DoctorType
+    ) {}
 
     toJSON(): IInquiryListParams {
         const params: IInquiryListParams = {};
@@ -88,6 +93,9 @@ export class InquiryListParams {
         }
         if (this.flagged === true || this.flagged === false) {
             params.flagged = this.flagged;
+        }
+        if (this.doctorType) {
+            params.doctorType = this.doctorType;
         }
         return params;
     }

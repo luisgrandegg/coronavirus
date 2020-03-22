@@ -6,11 +6,14 @@ import { Inquiry } from '../Inquiry';
 import { InquiryService, IInquiriesPaginated } from '../Inquiry/inquiry.service'
 import { StatType, StatPeriod, Stat } from '../Stat';
 import { StatService } from '../Stat/stat.service';
-import { Doctor } from '../Doctor';
+import { Doctor, DoctorType } from '../Doctor';
 import { DoctorService } from '../Doctor/doctor.service';
 import { StatsResponseDto } from '../dto/StatsResponseDto';
+import { AuthService } from '../Auth/auth.service';
+import { Auth } from '../Auth/Auth';
 
 export enum Routes {
+    MIGRATE = '/admin/migrate',
     STATS = '/admin/stats',
     SYNC_STATS = '/admin/sync-stats'
 }
@@ -18,6 +21,7 @@ export enum Routes {
 @Controller()
 export class AdminController {
     constructor(
+        private readonly authService: AuthService,
         private readonly userService: UserService,
         private readonly inquiryService: InquiryService,
         private readonly doctorService: DoctorService,
@@ -77,5 +81,36 @@ export class AdminController {
         });
 
         return {};
+    }
+
+    @Post(Routes.MIGRATE)
+    async migrate(): Promise<any> {
+        this.authService.get()
+            .then((auths: Auth[]) => {
+                auths.forEach((auth: Auth) => {
+                    auth.doctorType = DoctorType.REGULAR;
+                })
+            })
+
+        this.doctorService.get()
+            .then((doctors: Doctor[]) => {
+                doctors.forEach((doctor: Doctor) => {
+                    doctor.doctorType = DoctorType.REGULAR;
+                })
+            })
+
+        this.inquiryService.get()
+            .then((inquiriesPaginated: IInquiriesPaginated) => {
+                inquiriesPaginated.inquiries.forEach((inquiry: Inquiry) => {
+                    inquiry.doctorType = DoctorType.REGULAR
+                })
+            })
+
+        this.userService.get()
+            .then((users: User[]) => {
+                users.forEach((user: User) => {
+                    user.doctorType = DoctorType.REGULAR
+                })
+            })
     }
 }

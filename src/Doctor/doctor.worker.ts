@@ -5,7 +5,7 @@ import { InquiryEvents, IByUserInquiryEventData } from '../Inquiry/InquiryEvents
 import { UserEvents, IUserEventData } from 'src/User/UserEvents';
 import { Doctor } from './Doctor';
 import { DoctorEvents } from './DoctorEvents';
-import { UserType } from 'src/User';
+import { UserType } from '../User/User';
 
 export class DoctorWorker {
     constructor(

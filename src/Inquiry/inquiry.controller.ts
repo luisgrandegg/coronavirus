@@ -77,7 +77,7 @@ export class InquiryController {
         @Param('id') id: string,
         @Req() req: IRequest
     ): Promise<Inquiry> {
-        return this.inquiryService.attend(id, req.auth.userId);
+        return this.inquiryService.attend(id, req.auth);
     }
 
     @Post(Routes.UNATTEND)
@@ -85,7 +85,7 @@ export class InquiryController {
         @Param('id') id: string,
         @Req() req: IRequest
     ): Promise<Inquiry> {
-        return this.inquiryService.unattend(id, req.auth.userId);
+        return this.inquiryService.unattend(id, req.auth);
     }
 
     @Post(Routes.SOLVE)
@@ -139,17 +139,20 @@ export class InquiryController {
 
     @Get(Routes.GET)
     get(
+        @Req() req: IRequest,
         @Query() query: IInquiryListParamsRequest
     ): Promise<IInquiriesPaginated> {
-        const inquiryListParams = InquiryListParams.createFromRequest(query);
+        const doctorType = req.auth.isAdmin() ? undefined : req.auth.doctorType;
+        const inquiryListParams = InquiryListParams.createFromRequest(query, doctorType);
         return this.inquiryService.get(inquiryListParams);
     }
 
     @Get(Routes.GET_ONE)
     getOne(
+        @Req() req: IRequest,
         @Param('id') id: string
-    ): Promise<Inquiry | void> {
-        return this.inquiryService.getById(id)
+    ): Promise<Inquiry | void> {
+        return this.inquiryService.getById(id, req.auth)
             .catch((error: Error) => {
                 if (error instanceof InquiryDoesntExistsError) {
                     throw new HttpException({

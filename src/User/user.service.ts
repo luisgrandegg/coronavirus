@@ -55,6 +55,7 @@ export class UserService {
         user.type = registerUserDto.userType;
         user.isValidated = false;
         user.isActive = true;
+        user.doctorType = registerUserDto.doctorType;
         return this.userRepository.save(user)
             .then((user: User) => {
                 PubSub.publish(UserEvents.REGISTER, { user });

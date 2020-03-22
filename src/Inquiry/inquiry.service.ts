@@ -16,6 +16,8 @@ export interface IInquiriesPaginated {
     inquiries: Inquiry[];
     total: number;
 }
+import { Auth } from '../Auth/Auth';
+import { AuthError } from '../Auth/AuthError';
 
 @Injectable()
 export class InquiryService {
@@ -35,6 +37,8 @@ export class InquiryService {
         inquiry.time = this.cryptoService.encrypt(inquiryDto.time);
         inquiry.privacy = inquiryDto.privacy;
         inquiry.confirmAge = inquiryDto.confirmAge;
+        inquiry.doctorType = inquiryDto.doctorType;
+
         return this.inquiryRepository.save(inquiry)
             .then((inquiry: Inquiry) => {
                 PubSub.publish(InquiryEvents.INQUIRY_CREATED, { inquiry });
@@ -65,20 +69,30 @@ export class InquiryService {
         })
     }
 
-    async getById(id: string): Promise<Inquiry> {
+    async getById(id: string, auth: Auth): Promise<Inquiry> {
+        const { doctorType } = auth;
+
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
                 if (!inquiry) {
                     throw new InquiryDoesntExistsError();
+                }
+                if (!auth.isAdmin() && doctorType !== inquiry.doctorType) {
+                    throw new AuthError();
                 }
 
                 return this.decryptInquiry(inquiry);
             });
     }
 
-    async attend(id: string, userId: ObjectId): Promise<Inquiry> {
+    async attend(id: string, auth: Auth): Promise<Inquiry> {
+        const { doctorType, userId } = auth;
+
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
+                if (!auth.isAdmin() && doctorType !== inquiry.doctorType) {
+                    throw new AuthError();
+                }
                 inquiry.attended = true;
                 inquiry.doctorId = userId;
                 return this.inquiryRepository.save(inquiry)
@@ -89,9 +103,14 @@ export class InquiryService {
             });
     }
 
-    async unattend(id: string, userId: ObjectId): Promise<Inquiry> {
+    async unattend(id: string, auth: Auth): Promise<Inquiry> {
+        const { doctorType, userId } = auth;
+
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
+                if (!auth.isAdmin() && doctorType === inquiry.doctorType) {
+                    throw new AuthError();
+                }
                 inquiry.attended = false;
                 delete inquiry.doctorId;
                 return this.inquiryRepository.save(inquiry)

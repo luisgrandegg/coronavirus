@@ -1,4 +1,4 @@
-import { StatType, StatPeriod } from "../Stat";
+import { StatType, StatPeriod } from "../Stat/Stat";
 
 export interface IIStatsDto {
     types: StatType[];

@@ -23,6 +23,10 @@ export class AuthService {
         private doctorService: DoctorService
     ) {}
 
+    async get(): Promise<Auth[]> {
+        return this.authRepository.find();
+    }
+
     async getByToken(authorizationToken: string): Promise<Auth> {
         if (!authorizationToken) {
             throw new AuthError();
@@ -83,6 +87,7 @@ export class AuthService {
                 const authorization = new Auth();
                 authorization.userId = user.id;
                 authorization.userType = user.type;
+                authorization.doctorType = user.doctorType;
 
                 return this.authRepository.save(authorization);
             });

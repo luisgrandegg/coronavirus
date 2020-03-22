@@ -1,6 +1,7 @@
 
 
-import { UserType } from "../User";
+import { UserType } from "../User/User";
+import { DoctorType } from "../Doctor/Doctor";
 
 export interface IRegisterDoctorDto {
     name: string;
@@ -13,6 +14,7 @@ export interface IRegisterDoctorDto {
     confirmPassword: string;
     terms: boolean;
     privacy: boolean;
+    doctorType: string;
 }
 
 export class RegisterDoctorDto {
@@ -31,7 +33,8 @@ export class RegisterDoctorDto {
             request.password,
             request.confirmPassword,
             request.terms,
-            request.privacy
+            request.privacy,
+            request.doctorType as DoctorType
         );
     }
 
@@ -45,6 +48,7 @@ export class RegisterDoctorDto {
         public password: string,
         public confirmPassword: string,
         public terms: boolean,
-        public privacy: boolean
+        public privacy: boolean,
+        public doctorType: DoctorType
     ) {}
 }

@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { IsEmail, IsString, IsEnum, IsBoolean } from "class-validator";
 import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { ObjectID } from 'mongodb';
+import { DoctorType } from '../Doctor/Doctor';
 
 export enum UserType {
     ADMIN = 'admin',
@@ -18,6 +19,7 @@ export interface IUser {
     terms: boolean;
     privacy: boolean;
     updatedAt: Date;
+    doctorType: DoctorType;
 }
 
 @Entity()
@@ -46,6 +48,10 @@ export class User {
     @IsEnum(UserType)
     @Column()
     type: UserType;
+
+    @IsString()
+    @Column()
+    doctorType: DoctorType;
 
     @IsBoolean()
     @Column({
@@ -119,7 +125,8 @@ export class User {
             type: this.type,
             terms: this.terms,
             privacy: this.privacy,
-            updatedAt: this.updatedAt
+            updatedAt: this.updatedAt,
+            doctorType: this.doctorType
         };
     }
 }

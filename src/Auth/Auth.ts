@@ -3,12 +3,14 @@ import * as crypto from 'crypto';
 import { ObjectID } from 'mongodb';
 import { BeforeInsert, Column, CreateDateColumn, Entity, ObjectIdColumn, UpdateDateColumn } from 'typeorm';
 
-import { UserType } from '../User';
+import { UserType } from '../User/User';
+import { DoctorType } from '../Doctor/Doctor';
 
 export interface IAuth {
     token: string;
     userId: ObjectID;
     userType: UserType;
+    doctorType;
 }
 
 @Entity()
@@ -21,6 +23,10 @@ export class Auth {
 
     @Column()
     userType: UserType;
+
+    @IsString()
+    @Column()
+    doctorType: DoctorType;
 
     @IsString()
     @IsOptional()
@@ -42,7 +48,8 @@ export class Auth {
         return {
             token: this.token,
             userId: this.userId,
-            userType: this.userType
+            userType: this.userType,
+            doctorType: this.doctorType
         };
     }
 

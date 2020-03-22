@@ -1,4 +1,4 @@
-import { Stat } from "../Stat";
+import { Stat } from "../Stat/Stat";
 
 export interface IStatsResponseDto {
     [key: string]: {

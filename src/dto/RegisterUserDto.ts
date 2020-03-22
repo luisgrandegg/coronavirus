@@ -1,4 +1,5 @@
-import { UserType } from "../User";
+import { UserType } from "../User/User";
+import { DoctorType } from "../Doctor/Doctor";
 
 export interface IRegisterUserDto {
     email: string;
@@ -6,5 +7,6 @@ export interface IRegisterUserDto {
     password: string;
     terms: boolean;
     privacy: boolean;
-    userType: UserType
+    userType: UserType,
+    doctorType: DoctorType;
 }
