@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as PubSub from 'pubsub-js';
 
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
@@ -33,7 +34,7 @@ export class DoctorService {
         doctor.userId = auth.userId;
         return this.doctorRepository.save(doctor)
             .then((doctor: Doctor) => {
-                PubSub.publish(DoctorEvents.DOCTOR_VALIDATED, doctor);
+                PubSub.publish(DoctorEvents.DOCTOR_VALIDATED, { doctor });
                 return doctor;
             });
     }

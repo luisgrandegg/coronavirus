@@ -57,10 +57,7 @@ export class UserService {
         user.isActive = true;
         return this.userRepository.save(user)
             .then((user: User) => {
-                PubSub.publish(
-                    UserEvents.REGISTER,
-                    user
-                );
+                PubSub.publish(UserEvents.REGISTER, { user });
                 return user;
             });
     }
@@ -74,10 +71,7 @@ export class UserService {
                 user.isValidated = true;
                 return this.userRepository.save(user)
                     .then(() => {
-                        PubSub.publish(
-                            UserEvents.USER_VALIDATION,
-                            user
-                        );
+                        PubSub.publish(UserEvents.USER_VALIDATION, { user });
                         return user;
                     });
             });
@@ -92,10 +86,7 @@ export class UserService {
                 user.isValidated = false;
                 return this.userRepository.save(user)
                     .then(() => {
-                        PubSub.publish(
-                            UserEvents.USER_INVALIDATION,
-                            user
-                        );
+                        PubSub.publish(UserEvents.USER_INVALIDATION, user);
                         return user;
                     });
             });
@@ -110,10 +101,7 @@ export class UserService {
                 user.isActive = true;
                 return this.userRepository.save(user)
                     .then(() => {
-                        PubSub.publish(
-                            UserEvents.USER_ACTIVATION,
-                            user
-                        );
+                        PubSub.publish(UserEvents.USER_ACTIVATION, user);
                         return user;
                     });
             });
@@ -128,10 +116,7 @@ export class UserService {
                 user.isActive = false;
                 return this.userRepository.save(user)
                     .then(() => {
-                        PubSub.publish(
-                            UserEvents.USER_DEACTIVATION,
-                            user
-                        );
+                        PubSub.publish(UserEvents.USER_DEACTIVATION, user);
                         return user;
                     });
             });

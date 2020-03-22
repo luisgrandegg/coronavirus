@@ -29,9 +29,7 @@ export class InquiryService {
         inquiry.privacy = inquiryDto.privacy;
         return this.inquiryRepository.save(inquiry)
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_CREATED, {
-                    inquiry
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_CREATED, { inquiry });
                 return inquiry;
             });
     }
@@ -80,10 +78,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_ATTENDED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_ATTENDED, { inquiry, userId });
                 return inquiry;
             });
     }
@@ -96,10 +91,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_UNATTENDED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_UNATTENDED, { inquiry, userId });
                 return inquiry;
             });
     }
@@ -121,10 +113,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_FLAGGED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_FLAGGED, { inquiry, userId });
                 return inquiry;
             });
     }
@@ -136,10 +125,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_UNFLAGGED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_UNFLAGGED, { inquiry, userId });
                 return inquiry;
             });
     }
@@ -151,10 +137,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_ACTIVATED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_ACTIVATED, { inquiry, userId });
                 return inquiry;
             });
     }
@@ -166,10 +149,7 @@ export class InquiryService {
                 return this.inquiryRepository.save(inquiry)
             })
             .then((inquiry: Inquiry) => {
-                PubSub.publish(InquiryEvents.INQUIRY_DEACTIVATED, {
-                    inquiry,
-                    userId
-                });
+                PubSub.publish(InquiryEvents.INQUIRY_DEACTIVATED, { inquiry, userId });
                 return inquiry;
             });
     }
