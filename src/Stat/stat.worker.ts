@@ -27,7 +27,7 @@ export class StatWorker {
         )
 
         PubSub.subscribe(
-            InquiryEvents.INQUIRY_ATTENDED,
+            InquiryEvents.INQUIRY_UNATTENDED,
             () => { this.statService.decrease(StatType.INQUIRIES_ATTENDED, StatPeriod.TOTAL)}
         )
 
