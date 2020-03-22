@@ -1,8 +1,13 @@
 import { ObjectID, ObjectId } from "mongodb";
 
+export interface ISpecialities {
+    '$in': string[];
+}
+
 export interface IInquiryListParams {
     doctorId?: ObjectId;
-    speciality?: string;
+    speciality?: string | ISpecialities;
+    specialities?: string[];
     attended?: boolean;
     solved?: boolean;
     active?: boolean;
@@ -12,6 +17,7 @@ export interface IInquiryListParams {
 export interface IInquiryListParamsRequest {
     doctorId?: string;
     speciality?: string;
+    specialities?: string[];
     attended?: string;
     solved?: string;
     active?: string;
@@ -23,26 +29,28 @@ export class InquiryListParams {
         request: IInquiryListParamsRequest
     ): InquiryListParams {
         return new InquiryListParams(
-            request.doctorId ? ObjectID.createFromHexString(request.doctorId): undefined,
+            request.doctorId ? ObjectID.createFromHexString(request.doctorId) : undefined,
             request.speciality,
+            request.specialities,
             request.attended === 'false' ? false :
                 request.attended === 'true' ? true :
-                undefined,
+                    undefined,
             request.solved === 'false' ? false :
                 request.solved === 'true' ? true :
-                undefined,
+                    undefined,
             request.active === 'false' ? false :
                 request.active === 'true' ? true :
-                undefined,
+                    undefined,
             request.flagged === 'false' ? false :
                 request.flagged === 'true' ? true :
-                undefined
+                    undefined
         );
     }
 
     constructor(
         public doctorId?: ObjectId,
         public speciality?: string,
+        public specialities?: string[],
         public attended?: boolean,
         public solved?: boolean,
         public active?: boolean,
@@ -56,6 +64,9 @@ export class InquiryListParams {
         }
         if (this.speciality) {
             params.speciality = this.speciality;
+        }
+        if (this.specialities) {
+            params.speciality = { '$in': this.specialities };
         }
         if (this.attended === true || this.attended === false) {
             params.attended = this.attended;
