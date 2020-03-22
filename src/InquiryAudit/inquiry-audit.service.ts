@@ -5,13 +5,16 @@ import { InquiryAuditRepository } from './inquiry-audit.repository';
 import { InquiryAudit, InquiryAuditAction } from './InquiryAudit';
 import { Inquiry } from '../Inquiry';
 import { ObjectId } from 'mongodb';
+import { InquiryAuditWorker } from './inquiry-audit.worker';
 
 @Injectable()
 export class InquiryAuditService {
     constructor(
         @InjectRepository(InquiryAudit)
         private inquiryAuditRepository: InquiryAuditRepository
-    ) {}
+    ) {
+        new InquiryAuditWorker(this);
+    }
 
     async create(
         inquiry: Inquiry,

@@ -1,7 +1,7 @@
 import { Mail } from '../Mail';
 
 export class NewDoctorMail extends Mail {
-    static createFromDoctor(): NewDoctorMail {
+    static create(): NewDoctorMail {
         return new NewDoctorMail(
             {},
             'pati@citamedicaencasa.com',

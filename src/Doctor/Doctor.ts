@@ -1,6 +1,6 @@
 import { ObjectID } from 'mongodb';
 import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { IsString, IsOptional, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsNumber } from 'class-validator';
 
 export interface IDoctor {
     createdAt: Date;
@@ -10,6 +10,7 @@ export interface IDoctor {
     license: string;
     email: string;
     phone: string;
+    inquiriesAttended: number;
     updatedAt: Date;
     id: string;
     userId: string;
@@ -48,6 +49,11 @@ export class Doctor {
     @Column()
     phone: string;
 
+    @IsOptional()
+    @IsNumber()
+    @Column()
+    inquiriesAttended: number;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -64,6 +70,7 @@ export class Doctor {
             email: this.email,
             phone: this.phone,
             updatedAt: this.updatedAt,
+            inquiriesAttended: this.inquiriesAttended,
             id: this.id.toHexString(),
             userId: this.userId.toHexString()
         };

@@ -17,8 +17,7 @@ export enum Routes {
     UNFLAG = '/inquiries/:id/unflag',
     UNATTEND = '/inquiries/:id/unattend',
     ACTIVATE = '/inquiries/:id/activate',
-    DEACTIVATE = '/inquiries/:id/deactivate',
-    MIGRATE = '/inquiries/migrate'
+    DEACTIVATE = '/inquiries/:id/deactivate'
 }
 
 @Controller()
@@ -136,10 +135,5 @@ export class InquiryController {
                     }, HttpStatus.BAD_REQUEST)
                 }
             });
-    }
-
-    @Post(Routes.MIGRATE)
-    migrate(): any {
-        return this.inquiryService.migrate();
     }
 }

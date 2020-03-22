@@ -4,9 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DoctorService } from './doctor.service';
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
-import { MailModule } from '../Mail';
 import { DoctorController } from './doctor.controller';
-import { UserModule } from 'src/User';
+import { UserModule } from '../User';
 
 @Module({
     exports: [
@@ -14,7 +13,6 @@ import { UserModule } from 'src/User';
     ],
     imports: [
         TypeOrmModule.forFeature([Doctor, DoctorRepository]),
-        MailModule,
         UserModule
     ],
     controllers: [DoctorController],

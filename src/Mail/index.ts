@@ -1,4 +1,4 @@
 export * from './Mail';
 export * from './MailEvents';
-export * from './MailModule';
-export * from './MailService';
+export * from './mail.module';
+export * from './mail.service';
