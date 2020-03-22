@@ -45,4 +45,14 @@ export class Auth {
             userType: this.userType
         };
     }
+
+    isDoctor(): boolean {
+        return this.userType === UserType.DOCTOR_ADMIN ||
+            this.userType === UserType.DOCTOR;
+    }
+
+    isAdmin(): boolean {
+        return this.userType === UserType.DOCTOR_ADMIN ||
+            this.userType === UserType.ADMIN;
+    }
 }

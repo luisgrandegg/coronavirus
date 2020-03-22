@@ -12,10 +12,12 @@ import { InquiryController, Routes as InquiryRoutes } from './Inquiry/inquiry.co
 import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail';
 import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
-import { Routes as UserRoutes } from './User/user.controller';
-import { Routes as DoctorRoutes, DoctorController } from './Doctor/doctor.controller';
+import { DoctorController } from './Doctor/doctor.controller';
 import { CryptoModule } from './Crypto';
 import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
+import { StatModule } from './Stat/stat.module';
+import { AdminController, AdminModule } from './Admin';
+import { Stat } from './Stat';
 
 @Module({
     imports: [
@@ -25,6 +27,7 @@ import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
                 Doctor,
                 Inquiry,
                 InquiryAudit,
+                Stat,
                 User
             ],
             logging: false,
@@ -32,12 +35,14 @@ import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
             type: 'mongodb',
             url: database.url
         }),
+        AdminModule,
         AuthModule,
         CryptoModule,
         DoctorModule,
         InquiryModule,
         InquiryAuditModule,
         MailModule,
+        StatModule,
         UserModule
     ],
     controllers: [AppController],
@@ -60,9 +65,7 @@ export class AppModule {
                 { path: InquiryRoutes.UNFLAG, method: RequestMethod.POST },
                 { path: InquiryRoutes.SOLVE, method: RequestMethod.POST },
                 { path: InquiryRoutes.ACTIVATE, method: RequestMethod.POST },
-                { path: InquiryRoutes.DEACTIVATE, method: RequestMethod.POST },
-                { path: InquiryRoutes.MIGRATE, method: RequestMethod.POST }
-
+                { path: InquiryRoutes.DEACTIVATE, method: RequestMethod.POST }
             );
         consumer
             .apply(AuthAdminMiddleware)
@@ -70,5 +73,8 @@ export class AppModule {
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(DoctorController)
+        consumer
+            .apply(AuthAdminMiddleware)
+            .forRoutes(AdminController)
     }
 }

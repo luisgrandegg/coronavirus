@@ -8,10 +8,7 @@ import { InquiryListParams } from '../dto/InquiryListParams';
 import { InquiryRepository } from './inquiry.repository';
 import { ObjectId } from 'mongodb';
 import { CryptoService } from '../Crypto';
-import { InquiryAuditService, InquiryAuditAction } from '../InquiryAudit';
 import { InquiryDoesntExistsError } from './InquiryDoesntExistsError';
-import { MailService } from 'src/Mail';
-import { InquiryReportedMail } from './InquiryReportedMail';
 import { InquiryEvents } from './InquiryEvents';
 
 @Injectable()
@@ -19,15 +16,8 @@ export class InquiryService {
     constructor(
         @InjectRepository(Inquiry)
         private inquiryRepository: InquiryRepository,
-        private cryptoService: CryptoService,
-        private inquiryAuditService: InquiryAuditService,
-        private mailService: MailService
-    ) {
-        PubSub.subscribe(
-            InquiryEvents.INQUIRY_REPORTED,
-            () => { this.mailService.send(InquiryReportedMail.createFromInquiry()); }
-        )
-    }
+        private cryptoService: CryptoService
+    ) {}
 
     async create(inquiryDto: CreateInquiryDto): Promise<Inquiry> {
         const inquiry = this.inquiryRepository.create();
@@ -38,11 +28,24 @@ export class InquiryService {
         inquiry.terms = inquiryDto.terms;
         inquiry.privacy = inquiryDto.privacy;
         return this.inquiryRepository.save(inquiry)
-            .then((inquiry: Inquiry) =>
-                this.inquiryAuditService.create(inquiry, InquiryAuditAction.CREATE).then(() => inquiry));
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_CREATED, {
+                    inquiry
+                });
+                return inquiry;
+            });
     }
 
-    async get(inquiryListParams: InquiryListParams): Promise<Inquiry[]> {
+    async get(inquiryListParams?: InquiryListParams): Promise<Inquiry[]> {
+        if (!inquiryListParams) {
+            return this.inquiryRepository.find().then((inquiries: Inquiry[]): Inquiry[] => inquiries.map(
+                (inquiry: Inquiry): Inquiry => {
+                    inquiry.email = this.cryptoService.decrypt(inquiry.email);
+                    inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+                    return inquiry;
+                }
+            ))
+        }
         return this.inquiryRepository.find({
             where: { ...inquiryListParams.toJSON() },
             order: {
@@ -75,10 +78,13 @@ export class InquiryService {
                 inquiry.attended = true;
                 inquiry.doctorId = userId;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) =>
-                        this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.ASSIGN, userId
-                        ).then(() => inquiry));
+            })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_ATTENDED, {
+                    inquiry,
+                    userId
+                });
+                return inquiry;
             });
     }
 
@@ -88,11 +94,14 @@ export class InquiryService {
                 inquiry.attended = false;
                 delete inquiry.doctorId;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) =>
-                        this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.UNASSIGN, userId
-                        ).then(() => inquiry));
             })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_UNATTENDED, {
+                    inquiry,
+                    userId
+                });
+                return inquiry;
+            });
     }
 
     async solve(id: string, doctorId: string): Promise<Inquiry> {
@@ -110,13 +119,14 @@ export class InquiryService {
             .then((inquiry: Inquiry) => {
                 inquiry.flagged = true;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) => {
-                        PubSub.publish(InquiryEvents.INQUIRY_REPORTED, null);
-                        return this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.FLAG, userId
-                        ).then(() => inquiry)
-                    });
             })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_FLAGGED, {
+                    inquiry,
+                    userId
+                });
+                return inquiry;
+            });
     }
 
     async unflag(id: string, userId: ObjectId): Promise<Inquiry> {
@@ -124,11 +134,14 @@ export class InquiryService {
             .then((inquiry: Inquiry) => {
                 inquiry.flagged = false;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) =>
-                        this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.UNFLAG, userId
-                        ).then(() => inquiry));
             })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_UNFLAGGED, {
+                    inquiry,
+                    userId
+                });
+                return inquiry;
+            });
     }
 
     async activate(id: string, userId: ObjectId): Promise<Inquiry> {
@@ -136,11 +149,14 @@ export class InquiryService {
             .then((inquiry: Inquiry) => {
                 inquiry.active = true;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) =>
-                        this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.ACTIVATE, userId
-                        ).then(() => inquiry));
             })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_ACTIVATED, {
+                    inquiry,
+                    userId
+                });
+                return inquiry;
+            });
     }
 
     async deactivate(id: string, userId: ObjectId): Promise<Inquiry> {
@@ -148,21 +164,13 @@ export class InquiryService {
             .then((inquiry: Inquiry) => {
                 inquiry.active = false;
                 return this.inquiryRepository.save(inquiry)
-                    .then((inquiry: Inquiry) =>
-                        this.inquiryAuditService.create(
-                            inquiry, InquiryAuditAction.DEACTIVATE, userId
-                        ).then(() => inquiry));
             })
-    }
-
-    async migrate(): Promise<any> {
-        return this.inquiryRepository.find()
-            .then((inquiries: Inquiry[]) => {
-                return inquiries.map((inquiry: Inquiry) => {
-                    inquiry.flagged = false;
-                    inquiry.active = true;
-                    return this.inquiryRepository.save(inquiry);
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_DEACTIVATED, {
+                    inquiry,
+                    userId
                 });
-            })
+                return inquiry;
+            });
     }
 }

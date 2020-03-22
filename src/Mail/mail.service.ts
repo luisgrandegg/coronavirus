@@ -4,10 +4,12 @@ import * as SendgridMail from '@sendgrid/mail';
 import { Mail } from './Mail';
 
 import { mailer } from '../config';
+import { MailWorker } from './mail.worker';
 
 @Injectable()
 export class MailService {
     constructor() {
+        new MailWorker(this);
         this.configure();
     }
 
@@ -19,6 +21,7 @@ export class MailService {
             mail.from = mailer.from;
         }
         mail.templateId = this.getTemplateId(mail);
+
         return SendgridMail.send(mail.toJson());
     }
 

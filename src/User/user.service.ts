@@ -25,7 +25,11 @@ export class UserService {
         return this.userRepository.findOne({ email });
     }
 
-    async get(userListParams: UserListParams): Promise<User[]> {
+    async get(userListParams?: UserListParams): Promise<User[]> {
+        if (!userListParams) {
+            return this.userRepository.find();
+        }
+
         return this.userRepository.find({
             where: { ...userListParams.toJSON() },
             order: {
@@ -51,7 +55,14 @@ export class UserService {
         user.type = registerUserDto.userType;
         user.isValidated = false;
         user.isActive = true;
-        return this.userRepository.save(user);
+        return this.userRepository.save(user)
+            .then((user: User) => {
+                PubSub.publish(
+                    UserEvents.REGISTER,
+                    user
+                );
+                return user;
+            });
     }
 
     async validate(id: string): Promise<User> {
@@ -79,7 +90,14 @@ export class UserService {
                     throw new UserDoesntExistsError();
                 }
                 user.isValidated = false;
-                return this.userRepository.save(user);
+                return this.userRepository.save(user)
+                    .then(() => {
+                        PubSub.publish(
+                            UserEvents.USER_INVALIDATION,
+                            user
+                        );
+                        return user;
+                    });
             });
     }
 
@@ -90,7 +108,14 @@ export class UserService {
                     throw new UserDoesntExistsError();
                 }
                 user.isActive = true;
-                return this.userRepository.save(user);
+                return this.userRepository.save(user)
+                    .then(() => {
+                        PubSub.publish(
+                            UserEvents.USER_ACTIVATION,
+                            user
+                        );
+                        return user;
+                    });
             });
     }
 
@@ -101,7 +126,14 @@ export class UserService {
                     throw new UserDoesntExistsError();
                 }
                 user.isActive = false;
-                return this.userRepository.save(user);
+                return this.userRepository.save(user)
+                    .then(() => {
+                        PubSub.publish(
+                            UserEvents.USER_DEACTIVATION,
+                            user
+                        );
+                        return user;
+                    });
             });
     }
 }
