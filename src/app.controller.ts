@@ -1,8 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { StatService, Stat, StatType, StatPeriod } from './Stat';
 import { StatsResponseDto } from './dto/StatsResponseDto';
 
 export enum Routes {
+    CLAP = '/clap',
     HEALTH = '/health',
     STATS = '/stats'
 }
@@ -26,4 +27,10 @@ export class AppController {
             [StatType.INQUIRIES_ATTENDED, StatType.DOCTORS_VALIDATED],
         ).then((stats: Stat[]) => new StatsResponseDto(stats));
     }
+
+    @Post(Routes.CLAP)
+    async clap(): Promise<Stat> {
+        return this.statService.increase(StatType.DOCTOR_CLAPS, StatPeriod.TOTAL);
+    }
+
 }

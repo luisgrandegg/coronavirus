@@ -8,7 +8,8 @@ export enum StatType {
     INQUIRIES_FLAGGED = 'inquiries_flagged',
     INQUIRIES_BANNED = 'inquiries_banned',
     DOCTORS = 'doctors',
-    DOCTORS_VALIDATED = 'doctors_validated'
+    DOCTORS_VALIDATED = 'doctors_validated',
+    DOCTOR_CLAPS = 'doctor_claps'
 }
 
 export enum StatPeriod {
