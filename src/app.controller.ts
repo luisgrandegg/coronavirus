@@ -3,7 +3,7 @@ import { StatService, Stat, StatType, StatPeriod } from './Stat';
 import { StatsResponseDto } from './dto/StatsResponseDto';
 
 export enum Routes {
-    CLAP = '/clap',
+    CLAPS = '/claps',
     HEALTH = '/health',
     STATS = '/stats'
 }
@@ -28,9 +28,14 @@ export class AppController {
         ).then((stats: Stat[]) => new StatsResponseDto(stats));
     }
 
-    @Post(Routes.CLAP)
+    @Get(Routes.CLAPS)
+    async claps(): Promise<Stat> {
+        return this.statService.get(StatPeriod.TOTAL, [StatType.DOCTOR_CLAPS])
+            .then((stats: Stat[]) => stats[0])
+    }
+
+    @Post(Routes.CLAPS)
     async clap(): Promise<Stat> {
         return this.statService.increase(StatType.DOCTOR_CLAPS, StatPeriod.TOTAL);
     }
-
 }
