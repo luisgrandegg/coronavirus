@@ -32,11 +32,7 @@ export class DoctorService {
         doctor.email = registerDoctorDto.email;
         doctor.phone = registerDoctorDto.phone;
         doctor.userId = auth.userId;
-        return this.doctorRepository.save(doctor)
-            .then((doctor: Doctor) => {
-                PubSub.publish(DoctorEvents.DOCTOR_VALIDATED, { doctor });
-                return doctor;
-            });
+        return this.doctorRepository.save(doctor);
     }
 
     async findByIds(doctorIds: ObjectId[]): Promise<Doctor[]> {
