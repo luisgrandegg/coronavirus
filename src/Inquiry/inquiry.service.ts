@@ -27,6 +27,7 @@ export class InquiryService {
         inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
         inquiry.privacy = inquiryDto.privacy;
+        inquiry.confirmAge = inquiryDto.confirmAge;
         return this.inquiryRepository.save(inquiry)
             .then((inquiry: Inquiry) => {
                 PubSub.publish(InquiryEvents.INQUIRY_CREATED, { inquiry });
