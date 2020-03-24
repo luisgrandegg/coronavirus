@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpException, HttpStatus, Get, Param, Query, Req } from '@nestjs/common';
 
-import { InquiryService } from './inquiry.service';
+import { InquiryService, IInquiriesPaginated } from './inquiry.service';
 import { Inquiry } from './Inquiry';
 import { CreateInquiryDto, ICreateInquiryDto } from '../dto/CreateInquiryDto';
 import { InquiryListParams, IInquiryListParamsRequest } from '../dto/InquiryListParams';
@@ -24,7 +24,7 @@ export enum Routes {
 export class InquiryController {
     constructor(
         private readonly inquiryService: InquiryService
-    ) {}
+    ) { }
 
     @Post(Routes.CREATE)
     create(
@@ -130,7 +130,7 @@ export class InquiryController {
     @Get(Routes.GET)
     get(
         @Query() query: IInquiryListParamsRequest
-    ): Promise<Inquiry[]> {
+    ): Promise<IInquiriesPaginated> {
         const inquiryListParams = InquiryListParams.createFromRequest(query);
         return this.inquiryService.get(inquiryListParams);
     }
@@ -138,7 +138,7 @@ export class InquiryController {
     @Get(Routes.GET_ONE)
     getOne(
         @Param('id') id: string
-    ): Promise<Inquiry | void> {
+    ): Promise<Inquiry | void> {
         return this.inquiryService.getById(id)
             .catch((error: Error) => {
                 if (error instanceof InquiryDoesntExistsError) {

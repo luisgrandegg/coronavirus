@@ -3,10 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Auth } from './Auth';
-import { UserService, User } from '../User';
+import { User } from '../User';
+import { UserService } from '../User/user.service';
 import { LoginDto } from '../dto/LoginDto';
 import { RegisterDoctorDto } from '../dto/RegisterDoctorDto';
-import { DoctorService, Doctor } from '../Doctor';
+import { Doctor } from '../Doctor';
+import { DoctorService } from '../Doctor/doctor.service';
 import { AuthError } from './AuthError';
 import { UserDoesntExistsError } from '../User/UserDoesntExistsError';
 import { UserExistsError } from '../User/UserExistsError';

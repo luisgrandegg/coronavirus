@@ -1,9 +1,13 @@
-import { Controller, Post, Body, HttpException, HttpStatus, Get } from '@nestjs/common';
+import { Controller, Post, Get } from '@nestjs/common';
 
-import { UserService, User } from '../User';
-import { InquiryService, Inquiry } from '../Inquiry';
-import { StatService, StatType, StatPeriod, Stat } from '../Stat';
-import { DoctorService, Doctor } from '../Doctor';
+import { UserService } from '../User/user.service';
+import { User } from '../User';
+import { Inquiry } from '../Inquiry';
+import { InquiryService, IInquiriesPaginated } from '../Inquiry/inquiry.service'
+import { StatType, StatPeriod, Stat } from '../Stat';
+import { StatService } from '../Stat/stat.service';
+import { Doctor } from '../Doctor';
+import { DoctorService } from '../Doctor/doctor.service';
 import { StatsResponseDto } from '../dto/StatsResponseDto';
 
 export enum Routes {
@@ -18,7 +22,7 @@ export class AdminController {
         private readonly inquiryService: InquiryService,
         private readonly doctorService: DoctorService,
         private readonly statService: StatService
-    ) {}
+    ) { }
 
 
     @Get(Routes.STATS)
@@ -34,8 +38,8 @@ export class AdminController {
             this.userService.get(),
             this.inquiryService.get(),
             this.doctorService.get()
-        ]).then((value: [User[], Inquiry[], Doctor[]]) => {
-            const [users, inquiries, doctors] = value;
+        ]).then((value: [User[], IInquiriesPaginated, Doctor[]]) => {
+            const [users, { inquiries }, doctors] = value;
             const stats = {
                 [StatType.INQUIRIES]: 0,
                 [StatType.INQUIRIES_ATTENDED]: 0,

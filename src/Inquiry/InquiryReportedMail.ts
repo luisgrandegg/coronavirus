@@ -1,4 +1,4 @@
-import { Mail } from '../Mail';
+import { Mail } from '../Mail/Mail';
 
 export class InquiryReportedMail extends Mail {
     static createFromInquiry(): InquiryReportedMail {

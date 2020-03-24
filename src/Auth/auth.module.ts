@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { Auth } from './Auth';
-import { UserModule } from '../User';
-import { DoctorModule } from '../Doctor';
+import { UserModule } from '../User/user.module';
+import { DoctorModule } from '../Doctor/doctor.module';
 
 @Module({
     exports: [

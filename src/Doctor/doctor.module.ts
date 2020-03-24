@@ -5,7 +5,7 @@ import { DoctorService } from './doctor.service';
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
 import { DoctorController } from './doctor.controller';
-import { UserModule } from '../User';
+import { UserModule } from '../User/user.module';
 
 @Module({
     exports: [

@@ -1,4 +1,5 @@
 import { ObjectID, ObjectId } from "mongodb";
+import { InquiryPagination } from "../Inquiry";
 
 export interface ISpecialities {
     '$in': string[];
@@ -12,6 +13,8 @@ export interface IInquiryListParams {
     solved?: boolean;
     active?: boolean;
     flagged?: boolean;
+    page?: number;
+    perPage?: number;
 }
 
 export interface IInquiryListParamsRequest {
@@ -22,6 +25,8 @@ export interface IInquiryListParamsRequest {
     solved?: string;
     active?: string;
     flagged?: string;
+    page?: string;
+    perPage?: string;
 }
 
 export class InquiryListParams {
@@ -43,7 +48,9 @@ export class InquiryListParams {
                     undefined,
             request.flagged === 'false' ? false :
                 request.flagged === 'true' ? true :
-                    undefined
+                    undefined,
+            request.page ? parseInt(request.page) : 1,
+            request.perPage ? parseInt(request.perPage) : InquiryPagination.PER_PAGE
         );
     }
 
@@ -54,8 +61,10 @@ export class InquiryListParams {
         public attended?: boolean,
         public solved?: boolean,
         public active?: boolean,
-        public flagged?: boolean
-    ) {}
+        public flagged?: boolean,
+        public page?: number,
+        public perPage?: number
+    ) { }
 
     toJSON(): IInquiryListParams {
         const params: IInquiryListParams = {};
