@@ -11,6 +11,7 @@ export interface IInquiry {
     speciality: string;
     summary: string;
     terms: boolean;
+    time: string;
     privacy: boolean;
     attended: boolean;
     solved: boolean;
@@ -47,6 +48,10 @@ export class Inquiry {
     @IsBoolean()
     @Column()
     terms: boolean;
+
+    @IsString()
+    @Column()
+    time: string;
 
     @IsBoolean()
     @Column()
@@ -104,6 +109,7 @@ export class Inquiry {
             speciality: this.speciality,
             summary: this.summary,
             terms: this.terms,
+            time: this.time,
             privacy: this.privacy,
             attended: this.attended,
             solved: this.solved,
