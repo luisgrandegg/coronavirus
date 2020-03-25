@@ -13,7 +13,7 @@ export interface IInquiry {
     age: number;
     email: string;
     id: string;
-    doctorTpe: DoctorType;
+    doctorType: DoctorType;
     speciality?: string;
     summary: string;
     terms: boolean;
@@ -127,7 +127,7 @@ export class Inquiry {
             updatedAt: this.updatedAt,
             active: this.active,
             flagged: this.flagged,
-            doctorTpe: this.doctorType
+            doctorType: this.doctorType
         };
     }
 }

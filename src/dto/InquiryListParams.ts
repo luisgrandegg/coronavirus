@@ -14,8 +14,6 @@ export interface IInquiryListParams {
     solved?: boolean;
     active?: boolean;
     flagged?: boolean;
-    page?: number;
-    perPage?: number;
     doctorType?: DoctorType;
 }
 

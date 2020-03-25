@@ -51,15 +51,14 @@ export class InquiryService {
     }
 
     async get(inquiryListParams?: InquiryListParams): Promise<IInquiriesPaginated> {
-        const { page, perPage } = inquiryListParams;
         let query: FindManyOptions<Inquiry> = inquiryListParams ?
             {
                 where: { ...inquiryListParams.toJSON() },
                 order: {
                     createdAt: 1
                 },
-                skip: (page - 1) * perPage,
-                take: perPage
+                skip: (inquiryListParams.page - 1) * inquiryListParams.perPage,
+                take: inquiryListParams.perPage
             } :
             {};
         return this.inquiryRepository.findAndCount(query).then((value: [Inquiry[], number]): IInquiriesPaginated => {
@@ -112,7 +111,7 @@ export class InquiryService {
 
         return this.inquiryRepository.findOne(id)
             .then((inquiry: Inquiry) => {
-                if (!auth.isAdmin() && doctorType === inquiry.doctorType) {
+                if (!auth.isAdmin() && doctorType !== inquiry.doctorType) {
                     throw new AuthError();
                 }
                 inquiry.attended = false;
