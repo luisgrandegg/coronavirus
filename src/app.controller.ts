@@ -1,5 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { StatService, Stat, StatType, StatPeriod } from './Stat';
+import { Stat, StatType, StatPeriod } from './Stat/Stat';
+import { StatService } from './Stat/stat.service';
 import { StatsResponseDto } from './dto/StatsResponseDto';
 
 export enum Routes {

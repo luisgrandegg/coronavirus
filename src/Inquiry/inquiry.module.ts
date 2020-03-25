@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { InquiryService } from './inquiry.service';
 import { Inquiry } from './Inquiry';
 import { InquiryController } from './inquiry.controller';
-import { CryptoModule } from '../Crypto';
+import { CryptoModule } from '../Crypto/crypto.module';
 
 @Module({
     exports: [

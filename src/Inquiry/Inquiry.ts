@@ -2,6 +2,10 @@ import { ObjectID } from 'mongodb';
 import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional } from 'class-validator';
 
+export enum InquiryPagination {
+    PER_PAGE = 100
+}
+
 export interface IInquiry {
     createdAt: Date;
     doctorId?: string;

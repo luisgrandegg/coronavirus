@@ -1,6 +1,6 @@
 import * as PubSub from 'pubsub-js';
 
-import { MailService } from "../Mail";
+import { MailService } from "../Mail/mail.service";
 import { DoctorValidationMail } from '../Doctor/DoctorValidationMail';
 import { DoctorEvents, IDoctorEventData } from 'src/Doctor/DoctorEvents';
 

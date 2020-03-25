@@ -2,21 +2,27 @@ import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
-import { AuthModule, Auth } from './Auth';
-import { UserModule, User, UserController } from './User';
+import { Auth } from './Auth';
+import { AuthModule } from './Auth/auth.module';
+import { User } from './User';
+import { UserModule } from './User/user.module';
+import { UserController } from './User/user.controller';
 import { database } from './config';
-import { IsAuthorizedMiddleware } from './Auth/AuthMiddleware';
-import { DoctorModule, Doctor } from './Doctor';
-import { InquiryModule, Inquiry } from './Inquiry';
-import { InquiryController, Routes as InquiryRoutes } from './Inquiry/inquiry.controller';
+import { Doctor } from './Doctor';
+import { DoctorModule } from './Doctor/doctor.module';
+import { Inquiry } from './Inquiry';
+import { InquiryModule } from './Inquiry/inquiry.module';
+import { Routes as InquiryRoutes } from './Inquiry/inquiry.controller';
 import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
-import { MailModule } from './Mail';
+import { MailModule } from './Mail/mail.module';
 import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
 import { DoctorController } from './Doctor/doctor.controller';
-import { CryptoModule } from './Crypto';
-import { InquiryAuditModule, InquiryAudit } from './InquiryAudit';
+import { CryptoModule } from './Crypto/crypto.module';
+import { InquiryAudit } from './InquiryAudit';
+import { InquiryAuditModule } from './InquiryAudit/inquiry-audit.module'
 import { StatModule } from './Stat/stat.module';
-import { AdminController, AdminModule } from './Admin';
+import { AdminController } from './Admin/admin.controller';
+import { AdminModule } from './Admin/admin.module';
 import { Stat } from './Stat';
 
 @Module({

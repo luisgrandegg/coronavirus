@@ -7,9 +7,15 @@ import { CreateInquiryDto } from '../dto/CreateInquiryDto';
 import { InquiryListParams } from '../dto/InquiryListParams';
 import { InquiryRepository } from './inquiry.repository';
 import { ObjectId } from 'mongodb';
-import { CryptoService } from '../Crypto';
+import { CryptoService } from '../Crypto/crypto.service';
 import { InquiryDoesntExistsError } from './InquiryDoesntExistsError';
 import { InquiryEvents } from './InquiryEvents';
+import { FindManyOptions } from 'typeorm';
+
+export interface IInquiriesPaginated {
+    inquiries: Inquiry[];
+    total: number;
+}
 
 @Injectable()
 export class InquiryService {
@@ -17,7 +23,7 @@ export class InquiryService {
         @InjectRepository(Inquiry)
         private inquiryRepository: InquiryRepository,
         private cryptoService: CryptoService
-    ) {}
+    ) { }
 
     async create(inquiryDto: CreateInquiryDto): Promise<Inquiry> {
         const inquiry = this.inquiryRepository.create();
@@ -36,30 +42,27 @@ export class InquiryService {
             });
     }
 
-    async get(inquiryListParams?: InquiryListParams): Promise<Inquiry[]> {
-        if (!inquiryListParams) {
-            return this.inquiryRepository.find().then((inquiries: Inquiry[]): Inquiry[] => inquiries.map(
-                (inquiry: Inquiry): Inquiry => {
-                    inquiry.email = this.cryptoService.decrypt(inquiry.email);
-                    inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                    inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
-                    return inquiry;
-                }
-            ))
-        }
-        return this.inquiryRepository.find({
-            where: { ...inquiryListParams.toJSON() },
-            order: {
-                createdAt: 1
+    async get(inquiryListParams?: InquiryListParams): Promise<IInquiriesPaginated> {
+        const { page, perPage } = inquiryListParams;
+        let query: FindManyOptions<Inquiry> = inquiryListParams ?
+            {
+                where: { ...inquiryListParams.toJSON() },
+                order: {
+                    createdAt: 1
+                },
+                skip: (page - 1) * perPage,
+                take: perPage
+            } :
+            {};
+        return this.inquiryRepository.findAndCount(query).then((value: [Inquiry[], number]): IInquiriesPaginated => {
+            let [inquiries, total] = value;
+            inquiries = inquiries.map((inquiry: Inquiry): Inquiry => this.decryptInquiry(inquiry))
+
+            return {
+                inquiries,
+                total
             }
-        }).then((inquiries: Inquiry[]): Inquiry[] => inquiries.map(
-            (inquiry: Inquiry): Inquiry => {
-                inquiry.email = this.cryptoService.decrypt(inquiry.email);
-                inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
-                return inquiry;
-            }
-        ))
+        })
     }
 
     async getById(id: string): Promise<Inquiry> {
@@ -68,10 +71,8 @@ export class InquiryService {
                 if (!inquiry) {
                     throw new InquiryDoesntExistsError();
                 }
-                inquiry.email = this.cryptoService.decrypt(inquiry.email);
-                inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
-                return inquiry;
+
+                return this.decryptInquiry(inquiry);
             });
     }
 
@@ -157,5 +158,12 @@ export class InquiryService {
                 PubSub.publish(InquiryEvents.INQUIRY_DEACTIVATED, { inquiry, userId });
                 return inquiry;
             });
+    }
+
+    private decryptInquiry(inquiry: Inquiry): Inquiry {
+        inquiry.email = this.cryptoService.decrypt(inquiry.email);
+        inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+        inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
+        return inquiry;
     }
 }
