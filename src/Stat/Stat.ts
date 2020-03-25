@@ -8,7 +8,9 @@ export enum StatType {
     INQUIRIES_FLAGGED = 'inquiries_flagged',
     INQUIRIES_BANNED = 'inquiries_banned',
     DOCTORS = 'doctors',
+    PSYCHOLOGISTS = 'psychologists',
     DOCTORS_VALIDATED = 'doctors_validated',
+    PSYCHOLOGISTS_VALIDATED = 'psychologists_validated',
     DOCTOR_CLAPS = 'doctor_claps'
 }
 

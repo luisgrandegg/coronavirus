@@ -5,6 +5,7 @@ import { InquiryEvents } from '../Inquiry/InquiryEvents';
 import { StatType, StatPeriod } from './Stat';
 import { UserEvents, IUserEventData } from 'src/User/UserEvents';
 import { UserType } from '../User/User';
+import { DoctorType } from 'src/Doctor/Doctor';
 
 export class StatWorker {
     constructor(
@@ -58,7 +59,11 @@ export class StatWorker {
                 ) {
                     return;
                 }
-                this.statService.increase(StatType.DOCTORS, StatPeriod.TOTAL)
+                if (data.user.doctorType === DoctorType.REGULAR) {
+                    this.statService.increase(StatType.DOCTORS, StatPeriod.TOTAL)
+                } else if (data.user.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.increase(StatType.PSYCHOLOGISTS, StatPeriod.TOTAL)
+                }
             }
         )
 
@@ -71,7 +76,11 @@ export class StatWorker {
                 ) {
                     return;
                 }
-                this.statService.increase(StatType.DOCTORS_VALIDATED, StatPeriod.TOTAL)
+                if (data.user.doctorType === DoctorType.REGULAR) {
+                    this.statService.increase(StatType.DOCTORS_VALIDATED, StatPeriod.TOTAL)
+                } else if (data.user.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.increase(StatType.PSYCHOLOGISTS_VALIDATED, StatPeriod.TOTAL)
+                }
             }
         )
 
@@ -84,7 +93,11 @@ export class StatWorker {
                 ) {
                     return;
                 }
-                this.statService.decrease(StatType.DOCTORS_VALIDATED, StatPeriod.TOTAL)
+                if (data.user.doctorType === DoctorType.REGULAR) {
+                    this.statService.decrease(StatType.DOCTORS_VALIDATED, StatPeriod.TOTAL)
+                } else if (data.user.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.decrease(StatType.PSYCHOLOGISTS_VALIDATED, StatPeriod.TOTAL)
+                }
             }
         )
     }
