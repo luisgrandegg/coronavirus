@@ -42,7 +42,7 @@ export class InquiryService {
                 (inquiry: Inquiry): Inquiry => {
                     inquiry.email = this.cryptoService.decrypt(inquiry.email);
                     inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                    inquiry.time = this.cryptoService.decrypt(inquiry.time);
+                    inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                     return inquiry;
                 }
             ))
@@ -56,7 +56,7 @@ export class InquiryService {
             (inquiry: Inquiry): Inquiry => {
                 inquiry.email = this.cryptoService.decrypt(inquiry.email);
                 inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                inquiry.time = this.cryptoService.decrypt(inquiry.time);
+                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                 return inquiry;
             }
         ))
@@ -70,7 +70,7 @@ export class InquiryService {
                 }
                 inquiry.email = this.cryptoService.decrypt(inquiry.email);
                 inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
-                inquiry.time = this.cryptoService.decrypt(inquiry.time);
+                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                 return inquiry;
             });
     }
