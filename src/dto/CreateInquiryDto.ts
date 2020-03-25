@@ -6,6 +6,7 @@ export interface ICreateInquiryDto {
     speciality: string;
     summary: string;
     terms: boolean;
+    time: string;
     privacy: boolean;
     confirmAge: boolean;
 }
@@ -20,6 +21,7 @@ export class CreateInquiryDto {
             request.speciality,
             request.summary,
             request.terms,
+            request.time,
             request.privacy,
             request.confirmAge,
         );
@@ -31,6 +33,7 @@ export class CreateInquiryDto {
         public speciality: string,
         public summary: string,
         public terms: boolean,
+        public time: string,
         public privacy: boolean,
         public confirmAge: boolean
     ) { }

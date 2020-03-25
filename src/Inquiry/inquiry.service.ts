@@ -26,6 +26,7 @@ export class InquiryService {
         inquiry.speciality = inquiryDto.speciality;
         inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
+        inquiry.time = this.cryptoService.encrypt(inquiryDto.time);
         inquiry.privacy = inquiryDto.privacy;
         inquiry.confirmAge = inquiryDto.confirmAge;
         return this.inquiryRepository.save(inquiry)
@@ -41,6 +42,7 @@ export class InquiryService {
                 (inquiry: Inquiry): Inquiry => {
                     inquiry.email = this.cryptoService.decrypt(inquiry.email);
                     inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+                    inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                     return inquiry;
                 }
             ))
@@ -54,6 +56,7 @@ export class InquiryService {
             (inquiry: Inquiry): Inquiry => {
                 inquiry.email = this.cryptoService.decrypt(inquiry.email);
                 inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                 return inquiry;
             }
         ))
@@ -67,6 +70,7 @@ export class InquiryService {
                 }
                 inquiry.email = this.cryptoService.decrypt(inquiry.email);
                 inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
+                inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
                 return inquiry;
             });
     }
