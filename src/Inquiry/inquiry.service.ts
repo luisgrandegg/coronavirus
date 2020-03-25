@@ -27,6 +27,10 @@ export class InquiryService {
         private cryptoService: CryptoService
     ) { }
 
+    async save(inquiry: Inquiry): Promise<Inquiry> {
+        return this.inquiryRepository.save(inquiry);
+    }
+
     async create(inquiryDto: CreateInquiryDto): Promise<Inquiry> {
         const inquiry = this.inquiryRepository.create();
         inquiry.age = inquiryDto.age;

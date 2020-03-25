@@ -23,6 +23,10 @@ export class AuthService {
         private doctorService: DoctorService
     ) {}
 
+    async save(auth: Auth): Promise<Auth> {
+        return this.authRepository.save(auth);
+    }
+
     async get(): Promise<Auth[]> {
         return this.authRepository.find();
     }

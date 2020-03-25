@@ -17,6 +17,10 @@ export class UserService {
         private userRepository: UserRepository
     ) {}
 
+    async save(user: User): Promise<User> {
+        return this.userRepository.save(user);
+    }
+
     async getUserById(userId: string): Promise<User> {
         return this.userRepository.findById(userId);
     }

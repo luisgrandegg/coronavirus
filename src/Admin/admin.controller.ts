@@ -84,11 +84,12 @@ export class AdminController {
     }
 
     @Post(Routes.MIGRATE)
-    async migrate(): Promise<any> {
+    async migrate(): Promise<{}> {
         this.authService.get()
             .then((auths: Auth[]) => {
                 auths.forEach((auth: Auth) => {
                     auth.doctorType = DoctorType.REGULAR;
+                    this.authService.save(auth);
                 })
             })
 
@@ -96,21 +97,26 @@ export class AdminController {
             .then((doctors: Doctor[]) => {
                 doctors.forEach((doctor: Doctor) => {
                     doctor.doctorType = DoctorType.REGULAR;
+                    this.doctorService.save(doctor);
                 })
             })
 
         this.inquiryService.get()
             .then((inquiriesPaginated: IInquiriesPaginated) => {
                 inquiriesPaginated.inquiries.forEach((inquiry: Inquiry) => {
-                    inquiry.doctorType = DoctorType.REGULAR
+                    inquiry.doctorType = DoctorType.REGULAR;
+                    this.inquiryService.save(inquiry);
                 })
             })
 
         this.userService.get()
             .then((users: User[]) => {
                 users.forEach((user: User) => {
-                    user.doctorType = DoctorType.REGULAR
+                    user.doctorType = DoctorType.REGULAR;
+                    this.userService.save(user);
                 })
             })
+
+        return {};
     }
 }
