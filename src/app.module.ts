@@ -63,7 +63,8 @@ export class AppModule {
                 { path: InquiryRoutes.GET_ONE, method: RequestMethod.GET },
                 { path: InquiryRoutes.ATTEND, method: RequestMethod.POST },
                 { path: InquiryRoutes.UNATTEND, method: RequestMethod.POST },
-                { path: InquiryRoutes.FLAG, method: RequestMethod.POST }
+                { path: InquiryRoutes.FLAG, method: RequestMethod.POST },
+                { path: InquiryRoutes.UPDATE_SPECIALITY, method: RequestMethod.POST }
             );
         consumer
             .apply(AuthAdminMiddleware)

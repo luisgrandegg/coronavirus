@@ -17,7 +17,8 @@ export enum Routes {
     UNFLAG = '/inquiries/:id/unflag',
     UNATTEND = '/inquiries/:id/unattend',
     ACTIVATE = '/inquiries/:id/activate',
-    DEACTIVATE = '/inquiries/:id/deactivate'
+    DEACTIVATE = '/inquiries/:id/deactivate',
+    UPDATE_SPECIALITY = '/inquiries/:id/speciality/:speciality',
 }
 
 @Controller()
@@ -125,6 +126,15 @@ export class InquiryController {
         @Req() req: IRequest
     ): Promise<Inquiry> {
         return this.inquiryService.deactivate(id, req.auth.userId);
+    }
+
+    @Post(Routes.UPDATE_SPECIALITY)
+    updateSpeciality(
+        @Param('id') id: string,
+        @Param('speciality') speciality: string,
+        @Req() req: IRequest
+    ): Promise<Inquiry> {
+        return this.inquiryService.updateSpeciality(id, speciality, req.auth.userId);
     }
 
     @Get(Routes.GET)

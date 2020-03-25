@@ -160,6 +160,18 @@ export class InquiryService {
             });
     }
 
+    async updateSpeciality(id: string, speciality: string, userId: ObjectId): Promise<Inquiry> {
+        return this.inquiryRepository.findOne(id)
+            .then((inquiry: Inquiry) => {
+                inquiry.speciality = speciality;
+                return this.inquiryRepository.save(inquiry)
+            })
+            .then((inquiry: Inquiry) => {
+                PubSub.publish(InquiryEvents.INQUIRY_DEACTIVATED, { inquiry, userId });
+                return inquiry;
+            });
+    }
+
     private decryptInquiry(inquiry: Inquiry): Inquiry {
         inquiry.email = this.cryptoService.decrypt(inquiry.email);
         inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
