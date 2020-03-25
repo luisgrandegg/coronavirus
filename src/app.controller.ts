@@ -25,7 +25,7 @@ export class AppController {
     async stats(): Promise<StatsResponseDto> {
         return this.statService.get(
             StatPeriod.TOTAL,
-            [StatType.INQUIRIES_ATTENDED, StatType.DOCTORS_VALIDATED],
+            [StatType.INQUIRIES_ATTENDED, StatType.DOCTORS_VALIDATED, StatType.PSYCHOLOGISTS_VALIDATED],
         ).then((stats: Stat[]) => new StatsResponseDto(stats));
     }
 
