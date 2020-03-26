@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as PubSub from 'pubsub-js';
 
 import { Doctor } from './Doctor';
 import { DoctorRepository } from './doctor.repository';
@@ -9,10 +8,10 @@ import { RegisterDoctorDto } from '../dto/RegisterDoctorDto';
 import { DoctorListParams } from '../dto/DoctorListParams';
 import { User } from '../User';
 import { UserService } from '../User/user.service';
-import { UserListParams } from 'src/dto/UserListParams';
+import { UserListParams } from '../dto/UserListParams';
 import { ObjectId } from 'mongodb';
-import { DoctorEvents } from './DoctorEvents';
 import { DoctorWorker } from './doctor.worker';
+import { DoctorCommentDto } from '../dto/DoctorCommentDto';
 
 @Injectable()
 export class DoctorService {
@@ -34,6 +33,14 @@ export class DoctorService {
         doctor.phone = registerDoctorDto.phone;
         doctor.userId = auth.userId;
         return this.doctorRepository.save(doctor);
+    }
+
+    async comment(doctorId: string, doctorCommentDto: DoctorCommentDto): Promise<Doctor> {
+        return this.doctorRepository.findOne(doctorId)
+            .then((doctor: Doctor) => {
+                doctor.comment = doctorCommentDto.comment;
+                return this.doctorRepository.save(doctor);
+            })
     }
 
     async findByIds(doctorIds: ObjectId[]): Promise<Doctor[]> {

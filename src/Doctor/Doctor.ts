@@ -14,6 +14,7 @@ export interface IDoctor {
     updatedAt: Date;
     id: string;
     userId: string;
+    comment: string;
 }
 
 @Entity()
@@ -36,6 +37,11 @@ export class Doctor {
     @IsOptional()
     @Column()
     speciality: string;
+
+    @IsString()
+    @IsOptional()
+    @Column()
+    comment: string;
 
     @IsString()
     @Column()
@@ -72,7 +78,8 @@ export class Doctor {
             updatedAt: this.updatedAt,
             inquiriesAttended: this.inquiriesAttended,
             id: this.id.toHexString(),
-            userId: this.userId.toHexString()
+            userId: this.userId.toHexString(),
+            comment: this.comment
         };
     }
 }
