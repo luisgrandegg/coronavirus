@@ -182,7 +182,7 @@ export class InquiryService {
             });
     }
 
-    async updateSpeciality(id: string, speciality: string, userId: ObjectId): Promise<Inquiry> {
+    async updateSpeciality(id: string, speciality: string, auth: Auth): Promise<Inquiry> {
         return this.inquiryRepository.findOne(id)
             .then(async (inquiry: Inquiry) => {
                 const originalSpeciality = inquiry.speciality;
@@ -191,9 +191,9 @@ export class InquiryService {
                     .then((inquiry: Inquiry) => {
                         PubSub.publish(
                             InquiryEvents.INQUIRY_CHANGE_SPECIALITY,
-                            { inquiry, userId, data: {from: originalSpeciality, to: speciality} }
+                            { inquiry, userId: auth.userId, data: {from: originalSpeciality, to: speciality} }
                         );
-                        return inquiry.attended ? this.unattend(id, userId) : inquiry;
+                        return inquiry.attended ? this.unattend(id, auth) : inquiry;
                     })
             });
     }

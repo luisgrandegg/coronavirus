@@ -134,7 +134,7 @@ export class InquiryController {
         @Param('speciality') speciality: string,
         @Req() req: IRequest
     ): Promise<Inquiry> {
-        return this.inquiryService.updateSpeciality(id, speciality, req.auth.userId);
+        return this.inquiryService.updateSpeciality(id, speciality, req.auth);
     }
 
     @Get(Routes.GET)
