@@ -160,6 +160,22 @@ export class InquiryService {
             });
     }
 
+    async updateSpeciality(id: string, speciality: string, userId: ObjectId): Promise<Inquiry> {
+        return this.inquiryRepository.findOne(id)
+            .then(async (inquiry: Inquiry) => {
+                const originalSpeciality = inquiry.speciality;
+                inquiry.speciality = speciality;
+                return this.inquiryRepository.save(inquiry)
+                    .then((inquiry: Inquiry) => {
+                        PubSub.publish(
+                            InquiryEvents.INQUIRY_CHANGE_SPECIALITY,
+                            { inquiry, userId, data: {from: originalSpeciality, to: speciality} }
+                        );
+                        return inquiry.attended ? this.unattend(id, userId) : inquiry;
+                    })
+            });
+    }
+
     private decryptInquiry(inquiry: Inquiry): Inquiry {
         inquiry.email = this.cryptoService.decrypt(inquiry.email);
         inquiry.summary = this.cryptoService.decrypt(inquiry.summary);

@@ -9,7 +9,8 @@ export enum InquiryAuditAction {
     ASSIGN = 'assign',
     UNASSIGN = 'unassign',
     FLAG = 'flag',
-    UNFLAG = 'unflag'
+    UNFLAG = 'unflag',
+    CHANGE_SPECIALITY = 'change_speciality'
 }
 
 export interface IInquiryAudit {
@@ -17,6 +18,7 @@ export interface IInquiryAudit {
     id: string;
     inquiryId: string;
     userId?: string;
+    data: any;
     action: string;
     updatedAt: Date;
 }
@@ -37,6 +39,10 @@ export class InquiryAudit {
     @Column()
     action: string;
 
+    @IsOptional()
+    @Column()
+    data: any;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -50,7 +56,8 @@ export class InquiryAudit {
             inquiryId: this.inquiryId.toHexString(),
             userId: this.userId.toHexString(),
             action: this.action,
-            updatedAt: this.updatedAt
+            updatedAt: this.updatedAt,
+            data: this.data
         };
     }
 }
