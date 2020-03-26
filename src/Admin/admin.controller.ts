@@ -88,7 +88,7 @@ export class AdminController {
         this.authService.get()
             .then((auths: Auth[]) => {
                 auths.forEach((auth: Auth) => {
-                    auth.doctorType = DoctorType.REGULAR;
+                    auth.doctorType = auth.doctorType || DoctorType.REGULAR;
                     this.authService.save(auth);
                 })
             })
@@ -96,15 +96,15 @@ export class AdminController {
         this.doctorService.get()
             .then((doctors: Doctor[]) => {
                 doctors.forEach((doctor: Doctor) => {
-                    doctor.doctorType = DoctorType.REGULAR;
+                    doctor.doctorType = doctor.doctorType || DoctorType.REGULAR;
                     this.doctorService.save(doctor);
                 })
             })
 
-        this.inquiryService.get()
+        this.inquiryService.get(undefined, false)
             .then((inquiriesPaginated: IInquiriesPaginated) => {
                 inquiriesPaginated.inquiries.forEach((inquiry: Inquiry) => {
-                    inquiry.doctorType = DoctorType.REGULAR;
+                    inquiry.doctorType = inquiry.doctorType || DoctorType.REGULAR;
                     this.inquiryService.save(inquiry);
                 })
             })
@@ -112,7 +112,7 @@ export class AdminController {
         this.userService.get()
             .then((users: User[]) => {
                 users.forEach((user: User) => {
-                    user.doctorType = DoctorType.REGULAR;
+                    user.doctorType = user.doctorType || DoctorType.REGULAR;
                     this.userService.save(user);
                 })
             })

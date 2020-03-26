@@ -50,7 +50,7 @@ export class InquiryService {
             });
     }
 
-    async get(inquiryListParams?: InquiryListParams): Promise<IInquiriesPaginated> {
+    async get(inquiryListParams?: InquiryListParams, decrypt: boolean = true): Promise<IInquiriesPaginated> {
         let query: FindManyOptions<Inquiry> = inquiryListParams ?
             {
                 where: { ...inquiryListParams.toJSON() },
@@ -63,7 +63,7 @@ export class InquiryService {
             {};
         return this.inquiryRepository.findAndCount(query).then((value: [Inquiry[], number]): IInquiriesPaginated => {
             let [inquiries, total] = value;
-            inquiries = inquiries.map((inquiry: Inquiry): Inquiry => this.decryptInquiry(inquiry))
+            inquiries = inquiries.map((inquiry: Inquiry): Inquiry => decrypt ? this.decryptInquiry(inquiry): inquiry)
 
             return {
                 inquiries,
