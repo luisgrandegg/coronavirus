@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 
 export interface IInquiryEventData {
     inquiry: Inquiry;
+    data?: any;
 }
 export interface IByUserInquiryEventData extends IInquiryEventData {
     userId: ObjectId;
@@ -16,4 +17,5 @@ export enum InquiryEvents {
     INQUIRY_UNATTENDED = 'inquiry::unattended',
     INQUIRY_ACTIVATED = 'inquiry::activate',
     INQUIRY_DEACTIVATED = 'inquiry::deactivated',
+    INQUIRY_CHANGE_SPECIALITY = 'inquiry::change_especiality'
 }

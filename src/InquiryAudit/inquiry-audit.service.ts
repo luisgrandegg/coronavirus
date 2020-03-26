@@ -19,12 +19,16 @@ export class InquiryAuditService {
     async create(
         inquiry: Inquiry,
         inquiryAuditAction: InquiryAuditAction,
-        userId?: ObjectId
+        userId?: ObjectId,
+        data?: any
     ): Promise<InquiryAudit> {
         const inquiryAudit = this.inquiryAuditRepository.create();
         inquiryAudit.action = inquiryAuditAction;
         inquiryAudit.inquiryId = inquiry.id;
         inquiryAudit.userId = userId;
+        if (data) {
+            inquiryAudit.data = data;
+        }
         return this.inquiryAuditRepository.save(inquiryAudit);
     }
 }

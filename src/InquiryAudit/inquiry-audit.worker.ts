@@ -74,5 +74,14 @@ export class InquiryAuditWorker {
                 )
             }
         )
+
+        PubSub.subscribe(
+            InquiryEvents.INQUIRY_CHANGE_SPECIALITY,
+            (_msg: string, data: IByUserInquiryEventData): void => {
+                this.inquiryAuditService.create(
+                    data.inquiry, InquiryAuditAction.CHANGE_SPECIALITY, data.userId, data.data
+                )
+            }
+        )
     }
 }
