@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, Param, Req } from '@nestjs/common';
 
 import { Doctor } from '../Doctor/Doctor';
 import { DoctorService } from './doctor.service';
 import { IDoctorListParamsRequest, DoctorListParams } from '../dto/DoctorListParams';
 import { DoctorCommentDto, IDoctorCommentDto } from 'src/dto/DoctorCommentDto';
+import { IRequest } from '../Request';
 
 export enum Routes {
     GET = '/doctors',
@@ -18,9 +19,11 @@ export class DoctorController {
 
     @Get(Routes.GET)
     async get(
-        @Query() query: IDoctorListParamsRequest
+        @Query() query: IDoctorListParamsRequest,
+        @Req() req: IRequest
     ): Promise<Doctor[]> {
-        const doctorListParams = DoctorListParams.createFromRequest(query);
+        const doctorType = req.auth.isSuperAdmin() ? undefined : req.auth.doctorType;
+        const doctorListParams = DoctorListParams.createFromRequest(query, doctorType);
         return this.doctorService.get(doctorListParams);
     }
 

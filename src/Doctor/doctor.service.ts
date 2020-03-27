@@ -71,7 +71,9 @@ export class DoctorService {
             doctorListParams.isActive === true || doctorListParams.isActive === false,
             doctorListParams.isValidated === true || doctorListParams.isValidated === false
         ) {
-            return this.userService.get(new UserListParams(doctorListParams.isActive, doctorListParams.isValidated))
+            return this.userService.get(
+                new UserListParams(doctorListParams.isActive, doctorListParams.isValidated, doctorListParams.doctorType)
+            )
                 .then((users: User[]) => this.findByIds(users.map((user: User) => user.id)))
                 .catch(() => []);
         }

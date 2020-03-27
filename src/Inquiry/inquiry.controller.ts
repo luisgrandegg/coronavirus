@@ -142,7 +142,7 @@ export class InquiryController {
         @Req() req: IRequest,
         @Query() query: IInquiryListParamsRequest
     ): Promise<IInquiriesPaginated> {
-        const doctorType = req.auth.isAdmin() ? undefined : req.auth.doctorType;
+        const doctorType = req.auth.isSuperAdmin() ? undefined : req.auth.doctorType;
         const inquiryListParams = InquiryListParams.createFromRequest(query, doctorType);
         return this.inquiryService.get(inquiryListParams);
     }

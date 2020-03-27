@@ -55,7 +55,7 @@ export class StatWorker {
             (_msg: string, data: IUserEventData) => {
                 if (
                     data.user.type !== UserType.DOCTOR &&
-                    data.user.type !== UserType.DOCTOR_ADMIN
+                    data.user.type !== UserType.SUPER_ADMIN
                 ) {
                     return;
                 }
@@ -72,7 +72,7 @@ export class StatWorker {
             (_msg: string, data: IUserEventData) => {
                 if (
                     data.user.type !== UserType.DOCTOR &&
-                    data.user.type !== UserType.DOCTOR_ADMIN
+                    data.user.type !== UserType.SUPER_ADMIN
                 ) {
                     return;
                 }
@@ -89,7 +89,7 @@ export class StatWorker {
             (_msg: string, data: IUserEventData) => {
                 if (
                     data.user.type !== UserType.DOCTOR &&
-                    data.user.type !== UserType.DOCTOR_ADMIN
+                    data.user.type !== UserType.SUPER_ADMIN
                 ) {
                     return;
                 }

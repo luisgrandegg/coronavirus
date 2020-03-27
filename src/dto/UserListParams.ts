@@ -1,6 +1,9 @@
+import { DoctorType } from "src/Doctor";
+
 export interface IUserListParams {
     isActive?: boolean;
     isValidated?: boolean;
+    doctorType?: DoctorType;
 }
 
 export interface IUserListParamsRequest {
@@ -10,7 +13,8 @@ export interface IUserListParamsRequest {
 
 export class UserListParams {
     static createFromRequest(
-        request: IUserListParamsRequest
+        request: IUserListParamsRequest,
+        doctorType: DoctorType
     ): UserListParams {
         return new UserListParams(
             request.isActive === 'false' ? false :
@@ -18,13 +22,15 @@ export class UserListParams {
                 undefined,
             request.isValidated === 'false' ? false :
                 request.isValidated === 'true' ? true :
-                undefined
+                undefined,
+            doctorType
         );
     }
 
     constructor(
         public isActive?: boolean,
-        public isValidated?: boolean
+        public isValidated?: boolean,
+        public doctorType?: DoctorType
     ) {}
 
     toJSON(): IUserListParams {
@@ -34,6 +40,9 @@ export class UserListParams {
         }
         if (this.isValidated === true || this.isValidated === false) {
             params.isValidated = this.isValidated;
+        }
+        if (this.doctorType) {
+            params.doctorType = this.doctorType;
         }
         return params;
     }

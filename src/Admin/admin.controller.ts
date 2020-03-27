@@ -1,7 +1,7 @@
 import { Controller, Post, Get } from '@nestjs/common';
 
 import { UserService } from '../User/user.service';
-import { User } from '../User';
+import { User, UserType } from '../User';
 import { Inquiry } from '../Inquiry';
 import { InquiryService, IInquiriesPaginated } from '../Inquiry/inquiry.service'
 import { StatType, StatPeriod, Stat } from '../Stat';
@@ -113,6 +113,10 @@ export class AdminController {
             .then((users: User[]) => {
                 users.forEach((user: User) => {
                     user.doctorType = user.doctorType || DoctorType.REGULAR;
+                    //@ts-ignore
+                    user.type = user.type === 'doctor_admin' ?
+                        UserType.SUPER_ADMIN :
+                        user.type;
                     this.userService.save(user);
                 })
             })

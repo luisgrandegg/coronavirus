@@ -53,13 +53,18 @@ export class Auth {
         };
     }
 
+    isSuperAdmin(): boolean {
+        return this.userType === UserType.SUPER_ADMIN;
+    }
+
     isDoctor(): boolean {
-        return this.userType === UserType.DOCTOR_ADMIN ||
+        return this.userType === UserType.SUPER_ADMIN ||
+            this.userType === UserType.ADMIN ||
             this.userType === UserType.DOCTOR;
     }
 
     isAdmin(): boolean {
-        return this.userType === UserType.DOCTOR_ADMIN ||
+        return this.userType === UserType.SUPER_ADMIN ||
             this.userType === UserType.ADMIN;
     }
 }

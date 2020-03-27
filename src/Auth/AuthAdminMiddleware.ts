@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from 'express';
 
 import { IRequest } from '../Request';
 import { AuthService } from './auth.service';
-import { UserType } from '../User/User';
 import { AuthError } from './AuthError';
 
 @Injectable()
@@ -17,13 +16,9 @@ export class AuthAdminMiddleware implements NestMiddleware {
         res: Response,
         next: NextFunction
     ): Promise<Response | void> {
-        const allowedUsers = [
-            UserType.ADMIN,
-            UserType.DOCTOR_ADMIN
-        ];
         try {
             const auth = await this.authService.getByToken(req.header('Authorization'));
-            if (!auth || !allowedUsers.includes(auth.userType)) {
+            if (!auth || !auth.isAdmin()) {
                 const error = new AuthError();
                 throw new HttpException({
                     message: error.message,

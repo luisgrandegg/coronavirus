@@ -51,7 +51,7 @@ export class InquiryService {
     }
 
     async get(inquiryListParams?: InquiryListParams, decrypt: boolean = true): Promise<IInquiriesPaginated> {
-        let query: FindManyOptions<Inquiry> = inquiryListParams ?
+        const query: FindManyOptions<Inquiry> = inquiryListParams ?
             {
                 where: { ...inquiryListParams.toJSON() },
                 order: {

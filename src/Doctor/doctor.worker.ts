@@ -18,7 +18,7 @@ export class DoctorWorker {
         PubSub.subscribe(
             UserEvents.USER_VALIDATION,
             (_msg: string, data: IUserEventData) => {
-                if (data.user.type === UserType.DOCTOR || data.user.type === UserType.DOCTOR_ADMIN) {
+                if (data.user.type === UserType.DOCTOR || data.user.type === UserType.SUPER_ADMIN) {
                     this.doctorService.findByUserId(data.user.id).then((doctor: Doctor) => {
                         PubSub.publish(DoctorEvents.DOCTOR_VALIDATED, { doctor });
                     })
