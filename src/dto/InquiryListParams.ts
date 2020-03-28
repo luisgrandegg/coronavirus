@@ -27,6 +27,7 @@ export interface IInquiryListParamsRequest {
     flagged?: string;
     page?: string;
     perPage?: string;
+    doctorType?: string;
 }
 
 export class InquiryListParams {
@@ -52,7 +53,7 @@ export class InquiryListParams {
                     undefined,
             request.page ? parseInt(request.page) : 1,
             request.perPage ? parseInt(request.perPage) : InquiryPagination.PER_PAGE,
-            doctorType
+            doctorType ? doctorType : request.doctorType as DoctorType
         );
     }
 
