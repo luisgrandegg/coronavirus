@@ -1,10 +1,9 @@
 import { Mail } from '../Mail/Mail';
 import { Doctor } from './Doctor';
-import { DoctorValidationMail } from './DoctorValidationMail';
 
 export class PsychologistValidationMail extends Mail {
-    static createFromDoctor(doctor: Doctor): DoctorValidationMail {
-        return new DoctorValidationMail(
+    static createFromDoctor(doctor: Doctor): PsychologistValidationMail {
+        return new PsychologistValidationMail(
             {
                 name: doctor.name
             },
