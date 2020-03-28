@@ -9,6 +9,7 @@ export interface IDoctorListParams {
 export interface IDoctorListParamsRequest {
     isActive?: string;
     isValidated?: string;
+    doctorType?: string;
 }
 
 export class DoctorListParams {
@@ -23,7 +24,7 @@ export class DoctorListParams {
             request.isValidated === 'false' ? false :
                 request.isValidated === 'true' ? true :
                 undefined,
-            doctorType
+            doctorType ? doctorType : request.doctorType as DoctorType
         );
     }
 

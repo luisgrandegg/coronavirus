@@ -8,7 +8,7 @@ export enum UserType {
     ADMIN = 'admin',
     DOCTOR = 'doctor',
     SUPER_ADMIN = 'super_admin',
-    PATIENT = 'patient'
+    CITIZEN = 'citizen'
 }
 
 export interface IUser {
@@ -80,7 +80,7 @@ export class User {
 
     @BeforeInsert()
     setIsValidated(): void {
-        if (this.type === UserType.PATIENT) {
+        if (this.type === UserType.CITIZEN) {
             this.isValidated = true;
         } else {
             this.isValidated = false;
@@ -100,7 +100,7 @@ export class User {
     @BeforeInsert()
     setDefaultUserType(): void {
         if (!this.type) {
-            this.type = UserType.PATIENT;
+            this.type = UserType.CITIZEN;
         }
     }
 
