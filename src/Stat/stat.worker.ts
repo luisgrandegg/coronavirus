@@ -1,7 +1,7 @@
 import * as PubSub from 'pubsub-js';
 
 import { StatService } from "./stat.service";
-import { InquiryEvents } from '../Inquiry/InquiryEvents';
+import { InquiryEvents, IInquiryEventData } from '../Inquiry/InquiryEvents';
 import { StatType, StatPeriod } from './Stat';
 import { UserEvents, IUserEventData } from 'src/User/UserEvents';
 import { UserType } from '../User/User';
@@ -17,17 +17,32 @@ export class StatWorker {
     private bindEvents() {
         PubSub.subscribe(
             InquiryEvents.INQUIRY_CREATED,
-            () => { this.statService.increase(StatType.INQUIRIES, StatPeriod.TOTAL)}
+            (_msg: string, data: IInquiryEventData) => {
+                this.statService.increase(StatType.INQUIRIES, StatPeriod.TOTAL);
+                if (data.inquiry.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.increase(StatType.INQUIRIES_PSYCHOLOGIST, StatPeriod.TOTAL);
+                }
+            }
         )
 
         PubSub.subscribe(
             InquiryEvents.INQUIRY_ATTENDED,
-            () => { this.statService.increase(StatType.INQUIRIES_ATTENDED, StatPeriod.TOTAL)}
+            (_msg: string, data: IInquiryEventData) => {
+                this.statService.increase(StatType.INQUIRIES_ATTENDED, StatPeriod.TOTAL);
+                if (data.inquiry.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.increase(StatType.INQUIRIES_ATTENDED_PSYCHOLOGIST, StatPeriod.TOTAL);
+                }
+            }
         )
 
         PubSub.subscribe(
             InquiryEvents.INQUIRY_UNATTENDED,
-            () => { this.statService.decrease(StatType.INQUIRIES_ATTENDED, StatPeriod.TOTAL)}
+            (_msg: string, data: IInquiryEventData) => {
+                this.statService.decrease(StatType.INQUIRIES_ATTENDED, StatPeriod.TOTAL);
+                if (data.inquiry.doctorType === DoctorType.PSYCHOLOGIST) {
+                    this.statService.decrease(StatType.INQUIRIES_ATTENDED_PSYCHOLOGIST, StatPeriod.TOTAL);
+                }
+            }
         )
 
         PubSub.subscribe(

@@ -4,7 +4,9 @@ import {  IsString, IsNumber } from 'class-validator';
 
 export enum StatType {
     INQUIRIES = 'inquiries',
+    INQUIRIES_PSYCHOLOGIST = 'inquiries_psychologist',
     INQUIRIES_ATTENDED = 'inquiries_attended',
+    INQUIRIES_ATTENDED_PSYCHOLOGIST = 'inquiries_attended_psychologist',
     INQUIRIES_FLAGGED = 'inquiries_flagged',
     INQUIRIES_BANNED = 'inquiries_banned',
     DOCTORS = 'doctors',
