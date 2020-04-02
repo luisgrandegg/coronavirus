@@ -10,7 +10,8 @@ export enum InquiryAuditAction {
     UNASSIGN = 'unassign',
     FLAG = 'flag',
     UNFLAG = 'unflag',
-    CHANGE_SPECIALITY = 'change_speciality'
+    CHANGE_SPECIALITY = 'change_speciality',
+    CHANGE_DOCTOR_TYPE = 'change_doctor_type'
 }
 
 export interface IInquiryAudit {

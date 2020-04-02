@@ -17,5 +17,6 @@ export enum InquiryEvents {
     INQUIRY_UNATTENDED = 'inquiry::unattended',
     INQUIRY_ACTIVATED = 'inquiry::activate',
     INQUIRY_DEACTIVATED = 'inquiry::deactivated',
-    INQUIRY_CHANGE_SPECIALITY = 'inquiry::change_especiality'
+    INQUIRY_CHANGE_SPECIALITY = 'inquiry::change_especiality',
+    INQUIRY_CHANGE_DOCTOR_TYPE = 'inquiry::change_doctor_type'
 }

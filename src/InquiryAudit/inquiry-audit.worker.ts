@@ -83,5 +83,14 @@ export class InquiryAuditWorker {
                 )
             }
         )
+
+        PubSub.subscribe(
+            InquiryEvents.INQUIRY_CHANGE_DOCTOR_TYPE,
+            (_msg: string, data: IByUserInquiryEventData): void => {
+                this.inquiryAuditService.create(
+                    data.inquiry, InquiryAuditAction.CHANGE_DOCTOR_TYPE, data.userId, data.data
+                )
+            }
+        )
     }
 }

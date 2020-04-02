@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as PubSub from 'pubsub-js';
 
+import { DoctorType } from '../Doctor/Doctor';
 import { Inquiry } from './Inquiry';
 import { CreateInquiryDto } from '../dto/CreateInquiryDto';
 import { InquiryListParams } from '../dto/InquiryListParams';
@@ -182,6 +183,21 @@ export class InquiryService {
             });
     }
 
+    async updateDoctorType(id: string, doctorType: DoctorType, auth: Auth): Promise<Inquiry> {
+        const { userId } = auth;
+
+        return this.inquiryRepository.findOne(id)
+            .then((inquiry: Inquiry) => {
+                const originalDoctorType = inquiry.doctorType;
+                inquiry.doctorType = doctorType;
+                return this.inquiryRepository.save(inquiry)
+                    .then((inquiry: Inquiry) => {
+                        PubSub.publish(InquiryEvents.INQUIRY_CHANGE_DOCTOR_TYPE, { inquiry, userId, data: { from: originalDoctorType, to: doctorType } });
+                        return inquiry;
+                    })
+            });
+    }
+
     async updateSpeciality(id: string, speciality: string, auth: Auth): Promise<Inquiry> {
         return this.inquiryRepository.findOne(id)
             .then(async (inquiry: Inquiry) => {
@@ -193,7 +209,17 @@ export class InquiryService {
                             InquiryEvents.INQUIRY_CHANGE_SPECIALITY,
                             { inquiry, userId: auth.userId, data: {from: originalSpeciality, to: speciality} }
                         );
-                        return inquiry.attended ? this.unattend(id, auth) : inquiry;
+                        return inquiry;
+                    })
+                    .then((inquiry: Inquiry) => {
+                        return inquiry.attended ?
+                            this.unattend(id, auth) :
+                            inquiry;
+                    })
+                    .then((inquiry: Inquiry) => {
+                        return inquiry.doctorType === DoctorType.PSYCHOLOGIST ?
+                            this.updateDoctorType(id, DoctorType.REGULAR, auth) :
+                            inquiry;
                     })
             });
     }
