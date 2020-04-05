@@ -5,6 +5,8 @@ export interface ICreateGratitudeDto {
     message: string;
     name: string;
     title: string;
+    imagePublicId: string | null,
+    imagePublicUrl: string | null
 }
 
 export class CreateGratitudeDto {
@@ -14,13 +16,17 @@ export class CreateGratitudeDto {
         return new CreateGratitudeDto(
             request.title,
             request.message,
-            request.name
+            request.name,
+            request.imagePublicId,
+            request.imagePublicUrl
         );
     }
 
     constructor(
         public title: string,
         public message: string,
-        public name: string
+        public name: string,
+        public imagePublicId: string | null,
+        public imagePublicUrl: string | null
     ) { }
 }

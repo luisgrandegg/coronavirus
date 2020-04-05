@@ -26,6 +26,7 @@ import { AdminModule } from './Admin/admin.module';
 import { Stat } from './Stat';
 import { GratitudeModule } from './Gratitude/gratitude.module';
 import { Gratitude } from './Gratitude';
+import { MediaModule } from './Media/media.module';
 
 @Module({
     imports: [
@@ -52,6 +53,7 @@ import { Gratitude } from './Gratitude';
         InquiryModule,
         InquiryAuditModule,
         MailModule,
+        MediaModule,
         StatModule,
         UserModule
     ],
