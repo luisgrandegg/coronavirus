@@ -22,4 +22,8 @@ export const crypto = {
 
 export const ipInfo = {
     token: process.env.IP_INFO_TOKEN || process.env.CITA_MEDIA_IP_INFO_TOKEN
+};
+
+export const media = {
+    apiSecret: process.env.CLOUDINARY_API_SECRET || process.env.CITA_MEDIA_CLOUDINARY_API_SECRET
 }

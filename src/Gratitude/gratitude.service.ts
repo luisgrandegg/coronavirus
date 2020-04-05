@@ -21,6 +21,8 @@ export class GratitudeService {
         gratitude.title = createGratitudeDto.title;
         gratitude.message = createGratitudeDto.message;
         gratitude.name = createGratitudeDto.name;
+        gratitude.imagePublicId = createGratitudeDto.imagePublicId;
+        gratitude.imageUrl = createGratitudeDto.imagePublicUrl;
         return this.gratitudeRepository.save(gratitude);
     }
 }
