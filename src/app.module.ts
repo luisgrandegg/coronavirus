@@ -24,6 +24,8 @@ import { StatModule } from './Stat/stat.module';
 import { AdminController } from './Admin/admin.controller';
 import { AdminModule } from './Admin/admin.module';
 import { Stat } from './Stat';
+import { GratitudeModule } from './Gratitude/gratitude.module';
+import { Gratitude } from './Gratitude';
 
 @Module({
     imports: [
@@ -31,6 +33,7 @@ import { Stat } from './Stat';
             entities: [
                 Auth,
                 Doctor,
+                Gratitude,
                 Inquiry,
                 InquiryAudit,
                 Stat,
@@ -45,6 +48,7 @@ import { Stat } from './Stat';
         AuthModule,
         CryptoModule,
         DoctorModule,
+        GratitudeModule,
         InquiryModule,
         InquiryAuditModule,
         MailModule,
