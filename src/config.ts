@@ -19,3 +19,7 @@ export const mailer = {
 export const crypto = {
     secretKey: process.env.CRYPTO_SECRET_KEY || 'gatitos'
 };
+
+export const ipInfo = {
+    token: process.env.IP_INFO_TOKEN || process.env.CITA_MEDIA_IP_INFO_TOKEN
+}

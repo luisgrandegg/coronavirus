@@ -1,6 +1,6 @@
 import { ObjectID } from 'mongodb';
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
-import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional } from 'class-validator';
+import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, ObjectType } from "typeorm";
+import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional, IsObject } from 'class-validator';
 import { DoctorType } from '../Doctor/Doctor';
 
 export enum InquiryPagination {
@@ -95,6 +95,16 @@ export class Inquiry {
         default: true
     })
     active: boolean;
+
+    @IsOptional()
+    @IsString()
+    @Column()
+    ipAddress: string;
+
+    @IsOptional()
+    @IsObject()
+    @Column()
+    ipInfo: object;
 
     @CreateDateColumn()
     createdAt: Date;

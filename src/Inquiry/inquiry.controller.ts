@@ -1,10 +1,10 @@
-import { Controller, Post, Body, HttpException, HttpStatus, Get, Param, Query, Req } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, Get, Param, Query, Req, Ip } from '@nestjs/common';
 
 import { InquiryService, IInquiriesPaginated } from './inquiry.service';
 import { Inquiry } from './Inquiry';
 import { CreateInquiryDto, ICreateInquiryDto } from '../dto/CreateInquiryDto';
 import { InquiryListParams, IInquiryListParamsRequest } from '../dto/InquiryListParams';
-import { IRequest } from '../Request';
+import { IRequest, IpAddress } from '../Request';
 import { InquiryDoesntExistsError } from './InquiryDoesntExistsError';
 
 export enum Routes {
@@ -29,9 +29,10 @@ export class InquiryController {
 
     @Post(Routes.CREATE)
     create(
-        @Body() body: ICreateInquiryDto
+        @IpAddress() ipAddress: string,
+        @Body() body: ICreateInquiryDto,
     ): Promise<Inquiry> {
-        const inquiryDto = CreateInquiryDto.createFromRequest(body);
+        const inquiryDto = CreateInquiryDto.createFromRequest(body, ipAddress);
 
         if (!inquiryDto.terms) {
             throw new HttpException({

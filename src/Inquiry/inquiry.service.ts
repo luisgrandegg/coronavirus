@@ -19,6 +19,7 @@ export interface IInquiriesPaginated {
 }
 import { Auth } from '../Auth/Auth';
 import { AuthError } from '../Auth/AuthError';
+import { InquiryWorker } from './InquiryWorker';
 
 @Injectable()
 export class InquiryService {
@@ -26,7 +27,9 @@ export class InquiryService {
         @InjectRepository(Inquiry)
         private inquiryRepository: InquiryRepository,
         private cryptoService: CryptoService
-    ) { }
+    ) {
+        new InquiryWorker(this);
+    }
 
     async save(inquiry: Inquiry): Promise<Inquiry> {
         return this.inquiryRepository.save(inquiry);
@@ -43,6 +46,7 @@ export class InquiryService {
         inquiry.privacy = inquiryDto.privacy;
         inquiry.confirmAge = inquiryDto.confirmAge;
         inquiry.doctorType = inquiryDto.doctorType;
+        inquiry.ipAddress = inquiryDto.ipAddress;
 
         return this.inquiryRepository.save(inquiry)
             .then((inquiry: Inquiry) => {

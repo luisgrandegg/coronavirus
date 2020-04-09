@@ -15,7 +15,8 @@ export interface ICreateInquiryDto {
 
 export class CreateInquiryDto {
     static createFromRequest(
-        request: ICreateInquiryDto
+        request: ICreateInquiryDto,
+        ipAddress: string
     ): CreateInquiryDto {
         return new CreateInquiryDto(
             request.age,
@@ -26,7 +27,8 @@ export class CreateInquiryDto {
             request.time,
             request.privacy,
             request.confirmAge,
-            request.doctorType as DoctorType
+            request.doctorType as DoctorType,
+            ipAddress
         );
     }
 
@@ -39,6 +41,7 @@ export class CreateInquiryDto {
         public time: string,
         public privacy: boolean,
         public confirmAge: boolean,
-        public doctorType: DoctorType
+        public doctorType: DoctorType,
+        public ipAddress: string
     ) { }
 }
