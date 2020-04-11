@@ -1,5 +1,5 @@
 import { ObjectID } from 'mongodb';
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, ObjectType } from "typeorm";
+import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { IsBoolean, IsString, IsEmail, IsNumber, IsOptional, IsObject } from 'class-validator';
 import { DoctorType } from '../Doctor/Doctor';
 

@@ -3,7 +3,7 @@ import { Controller, Post, Body, Get, Query, Param, Req } from '@nestjs/common';
 import { Doctor } from '../Doctor/Doctor';
 import { DoctorService } from './doctor.service';
 import { IDoctorListParamsRequest, DoctorListParams } from '../dto/DoctorListParams';
-import { DoctorCommentDto, IDoctorCommentDto } from 'src/dto/DoctorCommentDto';
+import { DoctorCommentDto, IDoctorCommentDto } from '../dto/DoctorCommentDto';
 import { IRequest } from '../Request';
 
 export enum Routes {

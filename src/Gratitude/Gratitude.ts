@@ -1,6 +1,6 @@
 import { ObjectID } from 'mongodb';
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import {  IsString, IsOptional } from 'class-validator';
+import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
+import {  IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export interface IGratitude {
     id: string;
@@ -10,6 +10,8 @@ export interface IGratitude {
     createdAt: string;
     imagePublicId: string | null;
     imageUrl: string | null;
+    active: boolean;
+    flagged: boolean;
 }
 
 @Entity()
@@ -39,11 +41,29 @@ export class Gratitude {
     @Column()
     imageUrl: string;
 
+    @IsBoolean()
+    @Column({
+        default: false
+    })
+    flagged: boolean;
+
+    @IsBoolean()
+    @Column({
+        default: true
+    })
+    active: boolean;
+
     @CreateDateColumn()
     createdAt: Date;
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @BeforeInsert()
+    setFlags(): void {
+        this.active = true;
+        this.flagged = false;
+    }
 
     toJSON(): IGratitude {
         return {
@@ -53,7 +73,9 @@ export class Gratitude {
             message: this.message,
             name: this.name,
             imagePublicId: this.imagePublicId,
-            imageUrl: this.imageUrl
+            imageUrl: this.imageUrl,
+            active: this.active,
+            flagged: this.flagged
         };
     }
 }

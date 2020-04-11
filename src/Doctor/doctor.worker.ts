@@ -2,7 +2,7 @@ import * as PubSub from 'pubsub-js';
 
 import { DoctorService } from "./doctor.service";
 import { InquiryEvents, IByUserInquiryEventData } from '../Inquiry/InquiryEvents';
-import { UserEvents, IUserEventData } from 'src/User/UserEvents';
+import { UserEvents, IUserEventData } from '../User/UserEvents';
 import { Doctor } from './Doctor';
 import { DoctorEvents } from './DoctorEvents';
 import { UserType } from '../User/User';

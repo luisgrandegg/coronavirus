@@ -3,17 +3,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { GratitudeRepository } from './gratitude.repository';
 import { Gratitude } from './Gratitude';
-import { CreateGratitudeDto } from 'src/dto/CreateGratitudeDto';
+import { CreateGratitudeDto } from '../dto/CreateGratitudeDto';
+import { GratitudeListParams } from '../dto/GratitudeListParams';
 
 @Injectable()
 export class GratitudeService {
     constructor(
-        @InjectRepository(GratitudeRepository)
+        @InjectRepository(Gratitude)
         private gratitudeRepository: GratitudeRepository
     ) {}
 
-    get(): Promise<Gratitude[]> {
-        return this.gratitudeRepository.find();
+    getRandom(gratitudeListParams?: GratitudeListParams): Promise<Gratitude[]> {
+        return this.gratitudeRepository.manager.getMongoRepository(Gratitude).aggregateEntity([{
+            $match: gratitudeListParams
+        }, {
+            $sample: {
+                size: 75
+            }
+        }]).toArray();
     }
 
     create(createGratitudeDto: CreateGratitudeDto): Promise<Gratitude> {
@@ -24,5 +31,37 @@ export class GratitudeService {
         gratitude.imagePublicId = createGratitudeDto.imagePublicId;
         gratitude.imageUrl = createGratitudeDto.imagePublicUrl;
         return this.gratitudeRepository.save(gratitude);
+    }
+
+    async flag(id: string): Promise<Gratitude> {
+        return this.gratitudeRepository.findOne(id)
+            .then((inquiry: Gratitude) => {
+                inquiry.flagged = true;
+                return this.gratitudeRepository.save(inquiry)
+            });
+    }
+
+    async unflag(id: string): Promise<Gratitude> {
+        return this.gratitudeRepository.findOne(id)
+            .then((inquiry: Gratitude) => {
+                inquiry.flagged = false;
+                return this.gratitudeRepository.save(inquiry)
+            });
+    }
+
+    async activate(id: string): Promise<Gratitude> {
+        return this.gratitudeRepository.findOne(id)
+            .then((inquiry: Gratitude) => {
+                inquiry.active = true;
+                return this.gratitudeRepository.save(inquiry)
+            });
+    }
+
+    async deactivate(id: string): Promise<Gratitude> {
+        return this.gratitudeRepository.findOne(id)
+            .then((inquiry: Gratitude) => {
+                inquiry.active = false;
+                return this.gratitudeRepository.save(inquiry)
+            });
     }
 }

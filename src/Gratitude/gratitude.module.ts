@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { GratitudeService } from './gratitude.service';
 import { Gratitude } from './Gratitude';
-import { GratitudeRepository } from './gratitude.repository';
 import { GratitudeController } from './gratitude.controller';
 
 @Module({
@@ -11,7 +10,7 @@ import { GratitudeController } from './gratitude.controller';
         GratitudeService
     ],
     imports: [
-        TypeOrmModule.forFeature([Gratitude, GratitudeRepository]),
+        TypeOrmModule.forFeature([Gratitude]),
     ],
     controllers: [GratitudeController],
     providers: [GratitudeService],
