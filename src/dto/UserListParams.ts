@@ -1,4 +1,4 @@
-import { DoctorType } from "src/Doctor";
+import { DoctorType } from "../Doctor";
 
 export interface IUserListParams {
     isActive?: boolean;

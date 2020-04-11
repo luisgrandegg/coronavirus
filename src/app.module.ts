@@ -13,6 +13,7 @@ import { DoctorModule } from './Doctor/doctor.module';
 import { Inquiry } from './Inquiry';
 import { InquiryModule } from './Inquiry/inquiry.module';
 import { Routes as InquiryRoutes } from './Inquiry/inquiry.controller';
+import { Routes as GratitudeRoutes } from './Gratitude/gratitude.controller';
 import { AuthDoctorMiddleware } from './Auth/AuthDoctorMiddleware';
 import { MailModule } from './Mail/mail.module';
 import { AuthAdminMiddleware } from './Auth/AuthAdminMiddleware';
@@ -89,5 +90,13 @@ export class AppModule {
         consumer
             .apply(AuthAdminMiddleware)
             .forRoutes(AdminController)
+        consumer
+            .apply(AuthAdminMiddleware)
+            .forRoutes(
+                { path: GratitudeRoutes.UNFLAG, method: RequestMethod.POST },
+                { path: GratitudeRoutes.FLAG, method: RequestMethod.POST },
+                { path: GratitudeRoutes.ACTIVATE, method: RequestMethod.POST },
+                { path: GratitudeRoutes.DEACTIVATE, method: RequestMethod.POST }
+            );
     }
 }
