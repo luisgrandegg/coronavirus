@@ -11,6 +11,8 @@ export interface ICreateInquiryDto {
     privacy: boolean;
     confirmAge: boolean;
     doctorType: string;
+    gender?: string;
+    genderNonBinary?: string;
 }
 
 export class CreateInquiryDto {
@@ -28,7 +30,9 @@ export class CreateInquiryDto {
             request.privacy,
             request.confirmAge,
             request.doctorType as DoctorType,
-            ipAddress
+            ipAddress,
+            request.gender,
+            request.genderNonBinary
         );
     }
 
@@ -42,6 +46,8 @@ export class CreateInquiryDto {
         public privacy: boolean,
         public confirmAge: boolean,
         public doctorType: DoctorType,
-        public ipAddress: string
+        public ipAddress: string,
+        public gender?: string,
+        public genderNonBinary?: string
     ) { }
 }

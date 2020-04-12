@@ -24,6 +24,8 @@ export interface IInquiry {
     flagged: boolean;
     active: boolean;
     updatedAt: Date;
+    gender?: string;
+    genderNonBinary?: string;
 }
 
 @Entity()
@@ -96,6 +98,16 @@ export class Inquiry {
     })
     active: boolean;
 
+    @IsString()
+    @IsOptional()
+    @Column()
+    gender: string;
+
+    @IsString()
+    @IsOptional()
+    @Column()
+    genderNonBinary: string;
+
     @IsOptional()
     @IsString()
     @Column()
@@ -137,7 +149,9 @@ export class Inquiry {
             updatedAt: this.updatedAt,
             active: this.active,
             flagged: this.flagged,
-            doctorType: this.doctorType
+            doctorType: this.doctorType,
+            gender: this.gender,
+            genderNonBinary: this.genderNonBinary
         };
     }
 }

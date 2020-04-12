@@ -43,6 +43,8 @@ export class InquiryService {
         inquiry.summary = this.cryptoService.encrypt(inquiryDto.summary);
         inquiry.terms = inquiryDto.terms;
         inquiry.time = this.cryptoService.encrypt(inquiryDto.time);
+        inquiry.gender = inquiryDto.gender && this.cryptoService.encrypt(inquiryDto.gender);
+        inquiry.genderNonBinary = inquiryDto.genderNonBinary && this.cryptoService.encrypt(inquiryDto.genderNonBinary);
         inquiry.privacy = inquiryDto.privacy;
         inquiry.confirmAge = inquiryDto.confirmAge;
         inquiry.doctorType = inquiryDto.doctorType;
@@ -232,6 +234,8 @@ export class InquiryService {
         inquiry.email = this.cryptoService.decrypt(inquiry.email);
         inquiry.summary = this.cryptoService.decrypt(inquiry.summary);
         inquiry.time = inquiry.time ? this.cryptoService.decrypt(inquiry.time) : null;
+        inquiry.gender = inquiry.gender ? this.cryptoService.decrypt(inquiry.gender) : null;
+        inquiry.genderNonBinary = inquiry.genderNonBinary ? this.cryptoService.decrypt(inquiry.genderNonBinary) : null;
         return inquiry;
     }
 }
