@@ -10,6 +10,7 @@ export interface IInquiryListParams {
     doctorId?: ObjectId;
     speciality?: string | ISpecialities;
     specialities?: string[];
+    '$or'?: any[];
     attended?: boolean;
     solved?: boolean;
     active?: boolean;
@@ -21,6 +22,7 @@ export interface IInquiryListParamsRequest {
     doctorId?: string;
     speciality?: string;
     specialities?: string[];
+    countries?: string[];
     attended?: string;
     solved?: string;
     active?: string;
@@ -53,7 +55,8 @@ export class InquiryListParams {
                     undefined,
             request.page ? parseInt(request.page) : 1,
             request.perPage ? parseInt(request.perPage) : InquiryPagination.PER_PAGE,
-            doctorType ? doctorType : request.doctorType as DoctorType
+            doctorType ? doctorType : request.doctorType as DoctorType,
+            request.countries
         );
     }
 
@@ -67,7 +70,8 @@ export class InquiryListParams {
         public flagged?: boolean,
         public page?: number,
         public perPage?: number,
-        public doctorType?: DoctorType
+        public doctorType?: DoctorType,
+        public countries?: string[]
     ) {}
 
     toJSON(): IInquiryListParams {
@@ -80,6 +84,12 @@ export class InquiryListParams {
         }
         if (this.specialities) {
             params.speciality = { '$in': this.specialities };
+        }
+        if (this.countries && !this.countries.includes('ALL')) {
+            params['$or'] = [
+                { 'ipInfo': { $exists: false } },
+                { 'ipInfo.country': { $in: this.countries} }
+            ];
         }
         if (this.attended === true || this.attended === false) {
             params.attended = this.attended;
