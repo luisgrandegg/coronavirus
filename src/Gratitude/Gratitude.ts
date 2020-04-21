@@ -20,6 +20,7 @@ export class Gratitude {
     id: ObjectID;
 
     @IsString()
+    @IsOptional()
     @Column()
     title: string;
 
