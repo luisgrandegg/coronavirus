@@ -6,6 +6,7 @@ import { InquiryModule } from '../Inquiry/inquiry.module';
 import { AdminController } from './admin.controller';
 import { StatModule } from '../Stat/stat.module';
 import { AuthModule } from '../Auth/auth.module';
+import { MailModule } from '../Mail/mail.module';
 
 @Module({
     exports: [],
@@ -13,6 +14,7 @@ import { AuthModule } from '../Auth/auth.module';
         AuthModule,
         DoctorModule,
         InquiryModule,
+        MailModule,
         StatModule,
         UserModule
     ],

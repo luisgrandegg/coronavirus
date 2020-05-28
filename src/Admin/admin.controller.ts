@@ -11,8 +11,12 @@ import { DoctorService } from '../Doctor/doctor.service';
 import { StatsResponseDto } from '../dto/StatsResponseDto';
 import { AuthService } from '../Auth/auth.service';
 import { Auth } from '../Auth/Auth';
+import { MailService } from '../Mail/mail.service';
+import { ByeByeMail } from './ByeByeMail';
+import { UserListParams } from '../dto/UserListParams';
 
 export enum Routes {
+    BYE_BYE = '/admin/bye-bye',
     MIGRATE = '/admin/migrate',
     STATS = '/admin/stats',
     SYNC_STATS = '/admin/sync-stats'
@@ -22,12 +26,35 @@ export enum Routes {
 export class AdminController {
     constructor(
         private readonly authService: AuthService,
+        private readonly mailService: MailService,
         private readonly userService: UserService,
         private readonly inquiryService: InquiryService,
         private readonly doctorService: DoctorService,
         private readonly statService: StatService
     ) { }
 
+    @Post(Routes.BYE_BYE)
+    async byeBye(): Promise<void> {
+        // return this.userService.get(new UserListParams(true, true))
+        //     .then((users: User[]) => {
+        //         ['diego.garcimartin@gmail.com', 'luis.grande.garcia@gmail.com'].forEach((mail: string) => {
+        //             this.mailService.send(new ByeByeMail(
+        //                 {},
+        //                 mail,
+        //             ));
+        //         });
+        //         return users.map((user: User) => user.email);
+        //         // users.forEach((user: User) => {
+        //         //     this.mailService.send(ByeByeMail.createFromUser(user));
+        //         // });
+        //     });
+        return this.userService.get(new UserListParams(true, true))
+            .then((users: User[]) => {
+                users.forEach((user: User) => {
+                    this.mailService.send(ByeByeMail.createFromUser(user));
+                });
+            });
+    }
 
     @Get(Routes.STATS)
     async stats(): Promise<StatsResponseDto> {

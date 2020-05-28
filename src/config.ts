@@ -12,7 +12,8 @@ export const mailer = {
     from: process.env.MAILING_FROM || 'pati@citamedicaencasa.com',
     templates: {
         doctorValidation: process.env.MAILING_TEMPLATES_DOCTOR_VALIDATION || 'd-4dda00767eb94de482469e2cb180815b',
-        psychologistValidation: process.env.MAILING_TEMPLATES_PSYCHOLOGIST_VALIDATION || 'd-c539c325e9ba40e48e94c962b75d06ee'
+        psychologistValidation: process.env.MAILING_TEMPLATES_PSYCHOLOGIST_VALIDATION || 'd-c539c325e9ba40e48e94c962b75d06ee',
+        byeBye: 'd-668c25a7f88e4463ad39a7a5c60cadc2'
     }
 };
 
